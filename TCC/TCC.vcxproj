@@ -117,6 +117,7 @@
   <ItemGroup>
     <ClInclude Include="Cluster.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="HiperVolume.h" />
     <ClInclude Include="ISolution.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="KmeansS.h" />
@@ -125,10 +126,12 @@
     <ClInclude Include="NSGAII.h" />
     <ClInclude Include="Population.h" />
     <ClInclude Include="Problem.h" />
+    <ClInclude Include="SMSEMOA.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Cluster.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="HiperVolume.cpp" />
     <ClCompile Include="ISolution.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="KMeansS.cpp" />
@@ -138,6 +141,7 @@
     <ClCompile Include="NSGAII.cpp" />
     <ClCompile Include="Population.cpp" />
     <ClCompile Include="Problem.cpp" />
+    <ClCompile Include="SMSEMOA.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

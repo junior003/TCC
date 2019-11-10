@@ -82,7 +82,7 @@ void Population::Generate_Random_Individual(Problem * p)
 	kmeans_ST.Calculate_ALL_Spatial_Distance(*p);
 	kmeans_ST.Calculate_ALL_Temporal_Distance(*p);
 	kmeans_ST.Calculate_ALL_Spatial_Temporal_Distance(*p);
-
+	//cout << "criando ind | ";
 	//Associa um primeiro cliente aleatorio para cada veiculo
 	for (int i = 0; i < p->get_num_vehicle(); i++)
 	{
@@ -119,7 +119,7 @@ void Population::Generate_Random_Individual(Problem * p)
 			//50% de chance de ser aleatório e 50% de chance de ser guloso
 		
 		//metodo guloso
-			if (randomic(0,1)<0.7 && greedy)
+			if (randomic(0,1)<0.0 && greedy)
 			{
 				
 				not_used_IDs.clear();
@@ -160,7 +160,7 @@ void Population::Generate_Random_Individual(Problem * p)
 			}
 			else //metodo aleatorio
 			{
-				greedy = true;
+				//greedy = true;
 				//cout << "aleatorio" << endl;
 				//cout << "NCA:" << num_clients_added << endl;
 				//cout << "vescol:" << chosen_vehicle << endl;

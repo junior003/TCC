@@ -5,6 +5,8 @@
 #include "ISolution.h"
 #include "KmeansS.h"
 #include "KmeansST.h"
+#include "SMSEMOA.h"
+
 NSGAII::NSGAII()
 {
 }
@@ -25,24 +27,19 @@ void NSGAII::generate_Population(Problem p, int nind)
 	bool valid=false;
 	for (int i = 0; i < nind; i++)
 	{
-		if(i==0)
-		{
-			KmeansST kmeans_ST(p, p.get_num_vehicle(), 0.5, 0.5, 1, 1.5, 2);
-			kmeans_ST.Calculate_ALL_Spatial_Distance(p);
-			kmeans_ST.Calculate_ALL_Temporal_Distance(p);
-			kmeans_ST.Calculate_ALL_Spatial_Temporal_Distance(p);
-			kmeans_ST.execute_kmeans_ST(&p);
-			pop_1.add_individual(&build_solutions_space_or_timewindow_sort_ST(&p, &kmeans_ST, 1)[0]);
-		}
-		if (i == 1)
+		/*if (i < 5)
 		{
 			KmeansS kmeans(p.get_num_vehicle(), p.get_num_clients(), 2);
 			kmeans.execute_kmeans_S(&p);
 			pop_1.add_individual(&build_solutions_space_or_timewindow_sort_S(&p, &kmeans, 1)[0]);
+			cout << "2 ind" << endl;
 		}
-		else {
+		else {*/
+			//cout << "others ind" << endl;
+			
+			
 			pop_1.Generate_Random_Individual(&p);
-		}
+	//}
 		
 
 
@@ -922,14 +919,11 @@ void NSGAII::selection(Problem p, Population *p1, Population *p2)
 	for (int i = 0; i < fronts.size(); i++)
 	{
 		for (int j = 0; j < fronts.at(i).size(); j++)
-		{
-			
-			
+		{	
 			if (ind_surv < num_ind)
 			{
 				surv_pop.add_individual(&fronts.at(i).at(j));
-				ind_surv++;
-				
+				ind_surv++;	
 			}
 			if (((int)fronts.at(i).size() - (num_ind - ind_surv)) > 0 && num_ind - ind_surv!=0)
 			{
@@ -954,20 +948,14 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 	actual_num_sons = 0;
 	//cout << "GERACAO DA POPULACAO INICIAL" << endl;
 	generate_Population(p, num_ind);
-	
-	
-
+	SMSemoa sm(num_ind,num_generation,prob_crossover,prob_mutation);
 	while (actual_gen < num_generation)
 	{
-		
-		
 		actual_gen++;
 		int f1=0, f2=0;
-
-		
 		while (actual_num_sons < num_ind)
 		{
-			//cout << "BINARY TOURNAMENT" << endl;
+			//cout << "BT |";
 			binary_tournament(p, pop_1, &f1, &f2,num_generation);
 			
 			if (randomic(0, 1) < prob_crossover)
@@ -977,6 +965,7 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 				
 				//cout << "CROSSOVER" << endl;
 				
+				//cout << "COOX |";
 				crossover_OX(p,*pop_1.get_individual(f1), *pop_1.get_individual(f2), &pop_2);
 
 				
@@ -988,38 +977,41 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 		
 		if (randomic(0, 1) < prob_mutation)
 		{
+			//cout << "MT |";
 			
 			mutation(p, &pop_2);
 		}
 		//cout << "EVALUATE" << endl;
+		//cout << "EV |";
 		evaluate_population(p, &pop_1);
 		evaluate_population(p, &pop_2);
 		
 
 
-		
+		//cout << "SE |";
 		selection(p, &pop_1, &pop_2);
-		if (actual_gen == num_generation)
-		{
+	
 			
-			cout << fronts.at(0).size()<< " solucoes foram obtidas" << endl;
+			//cout << fronts.at(0).size()<< " solucoes" << endl;
 			for (int i = 0; i < fronts.at(0).size(); i++)
 			{
+
 				float ob1 = fronts.at(0).at(i).get_obj1_cost();
 				float ob2 = fronts.at(0).at(i).get_inv_obj2_freshness();
-				//cout << fronts.at(0).at(i).get_obj1_cost()<< endl;
-				//cout << fronts.at(0).at(i).get_obj2_freshness()<< endl;
-				
+
 				
 				fwrite(&ob1, sizeof(float),1,a1);
 				fwrite(&ob2,sizeof(float),1,a1);
-				
-				
 			}
-			cout << "TERMINOU GERACAO " << actual_gen << endl;
-			
-		}
+
 		
+		sm.Smetric(p);
+		fclose(a1);
+		if ((a1 = fopen("FRONT.bin", "ab")) == NULL)
+		{
+			cout << "erro ao abrir o arquivo";
+		}
+		//cout << "GERACAO: " << actual_gen << endl;
 		actual_num_sons = 0;
 		pop_1.clear_pop();
 		
@@ -1029,6 +1021,15 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 		pop_1.transfer_pop(&surv_pop);
 		
 		surv_pop.clear_pop();
+
+		if (actual_gen == num_generation)
+		{
+		
+			for (int i = 0; i < sm.hv_all_generations.size(); i++)
+			{
+				cout << sm.hv_all_generations.at(i) <<endl;
+			}
+		}
 		
 		
 	}

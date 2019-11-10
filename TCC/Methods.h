@@ -4,9 +4,10 @@
 #define METHODS_H
 
 #include "KmeansS.h"
-
+#include "SMSEMOA.h"
 #include "ISolution.h"
 #include "KmeansST.h"
+
 
 
 vector<int> calculate_diference(vector<int>*P, vector<int>*X);
@@ -27,5 +28,7 @@ void movement_inter_route(Problem p, ISolution*);
 
 void printaSolucao(Problem p, ISolution s);
 float randomic(float min, float max);
+
+
 #endif // !1
 

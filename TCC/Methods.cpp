@@ -5,6 +5,7 @@
 
 
 
+
 //Calcula a Diferenca entre dois conjuntos e retorna o resultado no primeiro
 vector<int> calculate_diference(vector<int>*P, vector<int>*X)
 {
@@ -531,3 +532,4 @@ float randomic(float min, float max)
 	}
 	return ((float)(rand() % 1000 / 1000.0)*(max - min) + min);
 }
+
