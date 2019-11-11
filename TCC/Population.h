@@ -18,6 +18,7 @@ public:
 	Population(int);
 	void set_max_size(int);
 	int get_max_size();
+	int get_actual_size();
 	void add_individual(ISolution*);
 	void remove_individual(ISolution*);
 	ISolution* get_individual(int);
@@ -28,6 +29,7 @@ public:
 	void transfer_pop(Population*);
 	void clear_pop();
 	void reset_ident();
+	void reset_ident_SMSEMOA();
 private:
 	friend class KmeansST;
 	int max_size;

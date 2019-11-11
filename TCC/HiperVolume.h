@@ -13,12 +13,17 @@
 #include <string.h>
 #include <stdio.h>
 #include "KmeansST.h"
+#include "SMSEMOA.h"
+
 
 class Hipervolume
 {
 public:
 	Hipervolume();
 	Hipervolume(float, float);
+
+
+	vector<float> hv_all_generations;
 
 	float Calcula_Area(vector<Tsol>* sols);
 
@@ -27,6 +32,8 @@ public:
 	void VerificaDominancia(vector<Tsol>* sols);
 
 	float Smetric_per_front(Problem p, vector<ISolution> front);
+
+	float Area_unique_Solution(Tsol s);
 
 
 	//funcoes referentes ao armazenamento do valor do hipervolume e dos fronts em arquivos

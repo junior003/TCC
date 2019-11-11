@@ -9,6 +9,7 @@
 #include "Population.h"
 #include "NSGAII.h"
 #include "SMSEMOA.h"
+#include "HiperVolume.h"
 #include <iomanip>
 #include <vector>
 #include <time.h>
@@ -119,6 +120,8 @@ int main(int argc, char*argv[])
 	//NSGAII nsga(tamp,ngen, pc , pm);
 	//nsga.execute_NSGAII(*p,arq1,arq2,arq3);
 
+
+	
 
 	SMSemoa sms(tamp, ngen, pc, pm);
 	sms.execute_SMSEMOA(*p, arq1);

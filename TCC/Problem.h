@@ -11,6 +11,12 @@
 #include <iostream>
 using namespace std;
 
+struct Tsol
+{
+	float ob1;
+	float ob2;
+};
+
 
 class Problem
 {

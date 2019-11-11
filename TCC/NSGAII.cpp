@@ -5,7 +5,7 @@
 #include "ISolution.h"
 #include "KmeansS.h"
 #include "KmeansST.h"
-#include "SMSEMOA.h"
+#include "HiperVolume.h"
 
 NSGAII::NSGAII()
 {
@@ -664,6 +664,7 @@ void NSGAII::crowding_distance_selection(Problem p, int F,int ind_surv)
 	order_matrix_CD_selection(dist_matrix_per_front, F);
 	
 
+	//Procura as soluções, por ordem decrescente de CD no front e coloca na pop sobrevivente
 	for (int i = 0; i < fronts.at(F).size(); i++)
 	{
 		for (int j = 0; j < fronts.at(F).size(); j++)
@@ -948,7 +949,7 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 	actual_num_sons = 0;
 	//cout << "GERACAO DA POPULACAO INICIAL" << endl;
 	generate_Population(p, num_ind);
-	SMSemoa sm(num_ind,num_generation,prob_crossover,prob_mutation);
+	Hipervolume hv;
 	while (actual_gen < num_generation)
 	{
 		actual_gen++;
@@ -992,7 +993,7 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 		selection(p, &pop_1, &pop_2);
 	
 			
-			//cout << fronts.at(0).size()<< " solucoes" << endl;
+			/*
 			for (int i = 0; i < fronts.at(0).size(); i++)
 			{
 
@@ -1003,31 +1004,28 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 				fwrite(&ob1, sizeof(float),1,a1);
 				fwrite(&ob2,sizeof(float),1,a1);
 			}
+			*/
 
-		
-		sm.Smetric(p);
-		fclose(a1);
-		if ((a1 = fopen("FRONT.bin", "ab")) == NULL)
-		{
-			cout << "erro ao abrir o arquivo";
-		}
+		cout<<"Hipervolume: "<<hv.Smetric_per_front(p, fronts.at(0))<<endl;
+
 		//cout << "GERACAO: " << actual_gen << endl;
 		actual_num_sons = 0;
 		pop_1.clear_pop();
 		
 		pop_2.clear_pop();
 
-		
 		pop_1.transfer_pop(&surv_pop);
 		
 		surv_pop.clear_pop();
 
+		
+		// Mostrando todas os hipervolumes de todas as geracoes:
 		if (actual_gen == num_generation)
 		{
 		
-			for (int i = 0; i < sm.hv_all_generations.size(); i++)
+			for (int i = 0; i < hv.hv_all_generations.size(); i++)
 			{
-				cout << sm.hv_all_generations.at(i) <<endl;
+				cout << hv.hv_all_generations.at(i) <<endl;
 			}
 		}
 		

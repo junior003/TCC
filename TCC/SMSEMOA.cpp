@@ -8,102 +8,6 @@
 
 using namespace std;
 
-void SMSemoa::VerificaRepeticao(vector<Tsol>* sols)
-{
-	vector<Tsol> unique;
-	vector<int> used;
-	bool is_unique = true;
-	for (int i = 0; i < sols->size(); i++)
-	{
-		is_unique = true;
-		for (int j = i; j < sols->size(); j++)
-		{
-			if (i != j)
-			{
-				if (sols->at(i).ob1 == sols->at(j).ob1 && sols->at(i).ob2 == sols->at(j).ob2)
-				{
-					is_unique = false;
-					sols->erase(sols->begin() + j);
-					unique.push_back(sols->at(i));
-					break;
-				}
-			}
-
-		}
-		if (is_unique)
-		{
-			unique.push_back(sols->at(i));
-		}
-
-
-	}
-	sols->clear();
-	sols->assign(unique.begin(), unique.end());
-
-	unique.clear();
-	for (int i = 0; i < sols->size(); i++)
-	{
-		is_unique = true;
-		for (int j = i; j < sols->size(); j++)
-		{
-			if (i != j)
-			{
-				if (sols->at(i).ob1 == sols->at(j).ob1 && sols->at(i).ob2 == sols->at(j).ob2)
-				{
-					is_unique = false;
-					sols->erase(sols->begin() + j);
-					unique.push_back(sols->at(i));
-					break;
-				}
-			}
-
-		}
-		if (is_unique)
-		{
-			unique.push_back(sols->at(i));
-		}
-
-
-	}
-	sols->clear();
-	sols->assign(unique.begin(), unique.end());
-}
-
-void SMSemoa::VerificaDominancia(vector<Tsol> *sols)
-{
-	int i, j;
-	vector<Tsol> Vdominadas;
-	bool dominada = false;
-	for (i = 0; i < sols->size(); i++)
-	{
-		for (j = 0; j < sols->size(); j++)
-		{
-
-			if (sols->at(i).ob1 < sols->at(j).ob1 && sols->at(i).ob2 < sols->at(j).ob2)
-			{
-				dominada = true;
-
-
-				break;
-			}
-			else {
-
-				dominada = false;
-			}
-
-		}
-		if (dominada)
-		{
-			dominada = false;
-			sols->erase(sols->begin() + j);
-			i = -1;
-		}
-	}
-
-}
-
-
-
 
 bool compara(Tsol a, Tsol b)
 {
@@ -112,615 +16,6 @@ bool compara(Tsol a, Tsol b)
 bool compara_IS(ISolution a, ISolution b)
 {
 	return (a.get_obj1_cost() < b.get_obj1_cost());
-}
-
-
-
-float SMSemoa::Calcula_Area(vector<Tsol> *sols)
-{
-	float Area_PR;
-	float A1 = 0;
-	float A2 = 0;
-	float A_inter = 0;
-	float A_total = 0;
-
-	sort(sols->begin(), sols->end(), compara);
-	vector<Tsol> inter;
-	Area_PR = Ponto_ref.ob1*Ponto_ref.ob2;
-	for (int i = 1; i < sols->size(); i++)
-	{
-		Tsol in;
-		in.ob1 = sols->at(i).ob1;
-		in.ob2 = sols->at(i - 1).ob2;
-		inter.push_back(in);
-	}
-	for (int i = 0; i < sols->size(); i++)
-	{
-		A_total += sols->at(i).ob1*sols->at(i).ob2;
-	}
-	for (int i = 0; i < inter.size(); i++)
-	{
-		A_total -= inter.at(i).ob1*inter.at(i).ob2;
-	}
-
-
-
-	A_total = Area_PR - A_total;
-
-	return A_total;
-}
-
-float SMSemoa::Calcula_Area_R(vector<Tsol> *sols)
-{
-	float Area_PR;
-	float A1 = 0;
-	float A2 = 0;
-	float A_inter = 0;
-	float A_total = 0;
-	sort(sols->begin(), sols->end(), compara);
-	Ponto_ref.ob2 = sols->at(0).ob2;
-	Ponto_ref.ob1 = sols->at(sols->size() - 1).ob1;
-	//cout << "ponto de referencia:" << Ponto_ref.ob1 << " X " << Ponto_ref.ob2 << endl;
-	vector<Tsol> inter;
-	Area_PR = Ponto_ref.ob1*Ponto_ref.ob2;
-	for (int i = 1; i < sols->size(); i++)
-	{
-		Tsol in;
-		in.ob1 = sols->at(i).ob1;
-		in.ob2 = sols->at(i - 1).ob2;
-		inter.push_back(in);
-		//cout << in.ob1 << "|" << in.ob2 << endl;
-	}
-	
-	for (int i = 0; i < sols->size(); i++)
-	{
-		A_total += sols->at(i).ob1*sols->at(i).ob2;
-		//cout << " ** "<<A_total << endl;
-	}
-	for (int i = 0; i < inter.size(); i++)
-	{
-		A_total -= inter.at(i).ob1*inter.at(i).ob2;
-		//cout << " ** " << A_total << endl;
-	}
-	//cout << "A_total = Area_PR - A_total" << endl;
-	//cout << A_total << "=" << Area_PR << "-" << A_total << endl;
-	A_total = Area_PR - A_total;
-	
-	return A_total;
-}
-
-
-void SMSemoa::LerInstancia()
-{
-	FILE* arq;
-
-	if ((arq = fopen("INS.bin", "rb")) == NULL)
-	{
-		cout << "erro ao abrir o arquivo";
-		return;
-	}
-	Tsol sol_aux;
-	float ob1, ob2;
-	while (!feof(arq))
-	{
-		fread(&ob1, sizeof(float), 1, arq);
-		fread(&ob2, sizeof(float), 1, arq);
-		sol_aux.ob1 = ob1;
-		sol_aux.ob2 = ob2;
-		instancia.push_back(sol_aux);
-		//cout<<"Solucao I(";
-		//cout<<ob1<<" , ";
-		//cout<<ob2<<")"<<endl;
-	}
-	fclose(arq);
-}
-
-void SMSemoa::hipervolume(float ar)
-{
-
-	FILE* arq;
-	if (ar < 0) { ar = ar * (-1); }
-
-	cout << "Area do conjunto da instancia: " << ar << endl;
-	if ((arq = fopen("Smetric.bin", "ab")) == NULL)
-	{
-		cout << "erro ao abrir o arquivo";
-		return;
-	}
-	if (ar > 0)
-	{
-		fwrite(&ar, sizeof(float), 1, arq);
-	}
-
-	fclose(arq);
-}
-
-
-
-float SMSemoa::Smetric(Problem p){
-	FILE* arq;
-
-	if ((arq = fopen("FRONT.bin", "rb")) == NULL)
-	{
-		cout << "erro ao abrir o arquivo";
-		return 0;
-	}
-	vector<Tsol> sols_R;
-
-	float ob1 = 0;
-	float ob2 = 0;
-	Tsol sol_aux;
-	int pos = 0;
-	float Area_referencia, Area_instancia;
-	while (!feof(arq))
-	{
-		fread(&ob1, sizeof(float), 1, arq);
-		fread(&ob2, sizeof(float), 1, arq);
-		sol_aux.ob1 = ob1;
-		sol_aux.ob2 = ob2;
-		
-		sols_R.push_back(sol_aux);
-
-	}
-	remove("FRONT.bin");
-
-	VerificaRepeticao(&sols_R);
-
-	VerificaDominancia(&sols_R);
-
-	Area_referencia = Calcula_Area_R(&sols_R);
-
-	FILE* arq2;
-
-	if ((arq2 = fopen("HV.bin", "wb")) == NULL)
-	{
-		cout << "erro ao abrir o arquivo";
-		return 0;
-	}
-	int tam = sols_R.size();
-	//fwrite(&Area_referencia, sizeof(float), 1, arq2);
-	//fwrite(&tam, sizeof(int), 1, arq2);
-	//cout << "Area: " << Area_referencia<<endl;
-	if (hv_all_generations.size() == 0)
-	{
-		hv_all_generations.push_back(Area_referencia);
-	}
-	else {
-		if (Area_referencia < hv_all_generations.at(hv_all_generations.size() - 1))
-		{
-			Area_referencia = hv_all_generations.at(hv_all_generations.size() - 1);
-			hv_all_generations.push_back(Area_referencia);
-		}
-		else
-		{
-			hv_all_generations.push_back(Area_referencia);
-		}
-	
-	}
-	
-	//hv_all_generations.push_back(Area_referencia);
-	
-	//cout << hv_all_generations.at(hv_all_generations.size() - 1) << endl;
-	//cout << "Num Solucoes: " << tam;
-	for (int i = 0; i < sols_R.size(); i++)
-	{
-		//fwrite(&sols_R.at(i).ob1, sizeof(float), 1, arq2);
-		//fwrite(&sols_R.at(i).ob2, sizeof(float), 1, arq2);
-		//cout << endl;
-		//cout << "sols_R.at(i).ob1: " << sols_R.at(i).ob1 << endl;
-		//cout << "sols_R.at(i).o21: " << sols_R.at(i).ob2 << endl;
-	}
-
-	return Area_referencia;
-}
-
-//recebe o front 0 e retorna o ponto de referencia para os demais fronts.
-Tsol SMSemoa::Create_ref_point(vector<ISolution> front)
-{
-	sort(front.begin(), front.end(), compara_IS);
-	Ponto_ref.ob2 = front.at(0).get_obj2_freshness();
-	Ponto_ref.ob1 = front.at(front.size() - 1).get_obj1_cost();
-}
-
-//trocar o tipo do vector para Isolution
-float SMSemoa::Smetric_per_front(Problem p, vector<ISolution> front)
-{
-
-	vector<Tsol> sols_R;
-
-	float ob1 = 0;
-	float ob2 = 0;
-	Tsol sol_aux;
-	int pos = 0;
-	float Area_referencia, Area_instancia;
-
-	cout << "Front:" << endl << endl;
-	for (int i = 0; i < front.size(); i++)
-	{
-		sol_aux.ob1 = front.at(i).get_obj1_cost();
-		sol_aux.ob2 = front.at(i).get_obj2_freshness();
-		cout << sol_aux.ob1 << endl;
-		cout << sol_aux.ob2 << endl;
-		sols_R.push_back(sol_aux);
-	}
-
-	VerificaRepeticao(&sols_R);
-
-	VerificaDominancia(&sols_R);
-
-	Area_referencia = Calcula_Area_R(&sols_R);
-
-	
-	//cout << "Area: " << Area_referencia<<endl;
-	//hv_all_generations.push_back(Area_referencia);
-	//cout << hv_all_generations.at(hv_all_generations.size() - 1) << endl;
-	//cout << "Num Solucoes: " << tam;
-
-	return Area_referencia;
-}
-
-float SMSemoa::Area_unique_Solution(Problem p, Tsol s)
-{
-	float Area_S = (Ponto_ref.ob1-s.ob1)*(Ponto_ref.ob2-s.ob2);
-
-	return Area_S;
-}
-
-int SMSemoa::Minor_HV_per_front(Problem p, vector<ISolution> front)
-{
-	Tsol aux;
-	float minor=999999,aux_area;
-	int pos_minor;
-	for (int i = 0; i < front.size(); i++)
-	{
-		aux.ob1 = front.at(i).get_obj1_cost();
-		aux.ob2 = front.at(i).get_obj2_freshness();
-		aux_area = Area_unique_Solution(p, aux);
-		if (minor < aux_area)
-		{
-			minor = aux_area;
-			pos_minor = i;
-		}
-		
-	}
-	return pos_minor;
-}
-
-void SMSemoa::remove_minor_HV(Problem p,int id_front)
-{
-	smetric_actual_front = Smetric_per_front(p, fronts.at(id_front));
-	int minor_HV=-1;
-	minor_HV = Minor_HV_per_front(p, fronts.at(id_front));
-	fronts.at(id_front).erase(fronts.at(id_front).begin() + minor_HV);
-}
-void SMSemoa::add_new_ind_per_front(Problem p, int id_front)
-{
-	float new_smetric_front=0;
-	ISolution *S;
-	cout << "Smetric original:" << smetric_actual_front;
-	while (new_smetric_front <= smetric_actual_front)
-	{
-		fronts.at(id_front).push_back(generate_individual_S(&p));
-		new_smetric_front = Smetric_per_front(p, fronts.at(id_front));
-		cout << "new: " << new_smetric_front<<endl;
-	}
-}
-
-ISolution SMSemoa::generate_individual_S(Problem *p)
-{
-	ISolution *S;
-	vector< vector<int> > temp_sol;
-	vector<int> temp_route;
-	vector<int> used_IDs;
-	int* temp_route_aux;
-	bool valid = false;
-	int num_clients_added = 0;
-	int chosen_vehicle;
-	int acum_demand = 0;
-	int cont_choosen_random_cl = 0;
-	int added = 0;
-	int actual_vehicle = 0;
-	bool greedy = true;
-	//guloso
-	int minor_dst = 0;
-	vector<int> not_used_IDs;
-	
-	KmeansST kmeans_ST(*p, p->get_num_vehicle(), 0.5, 0.5, 1, 1.5, 2);
-	kmeans_ST.Calculate_ALL_Spatial_Distance(*p);
-	kmeans_ST.Calculate_ALL_Temporal_Distance(*p);
-	kmeans_ST.Calculate_ALL_Spatial_Temporal_Distance(*p);
-	//cout << "criando ind | ";
-	//Associa um primeiro cliente aleatorio para cada veiculo
-	for (int i = 0; i < p->get_num_vehicle(); i++)
-	{
-		do
-		{
-
-			int new_ID = (rand() % p->get_num_clients() + 1);//cria valores aleatorios
-			if (find(used_IDs.begin(), used_IDs.end(), new_ID) == used_IDs.end() && new_ID != 0)
-			{
-				used_IDs.push_back(new_ID);// adiciona o incice no vetor de indices usados
-				temp_route.clear();
-				temp_route.push_back(new_ID);
-				temp_sol.push_back(temp_route);
-				num_clients_added++;
-				valid = true;
-			}
-			else
-			{
-				valid = false;
-			}
-
-		} while (!valid);
-	}
-	valid = false;
-
-
-	for (int i = 0; i < p->get_num_vehicle(); i++)
-	{
-		acum_demand = 0;
-		for (int k = 0; k < temp_sol[i].size(); k++)
-		{
-			acum_demand += p->get_client(temp_sol[i][k])->get_demand();
-		}
-		//50% de chance de ser aleatório e 50% de chance de ser guloso
-
-	//metodo guloso
-		if (randomic(0, 1) < 0.0 && greedy)
-		{
-
-			not_used_IDs.clear();
-
-			for (int j = 1; j < p->get_num_clients() + 1; j++)
-			{
-				not_used_IDs.push_back(j);
-
-
-			}
-
-			not_used_IDs = calculate_diference(&not_used_IDs, &used_IDs);
-
-			minor_dst = find_minor_DST(*p, temp_sol[i][temp_sol[i].size() - 1], &not_used_IDs, &kmeans_ST);
-
-			if (acum_demand + p->get_client(minor_dst)->get_demand() > p->get_capacity())
-			{
-				// cout << "nao cabe, logo nao pode ser guloso mais" << endl;
-				greedy = false;
-				i--;
-				continue;
-			}
-			else
-			{
-				// cout << "cabe" << endl;
-
-				used_IDs.push_back(minor_dst);// adiciona o incice no vetor de indices usados
-				temp_sol[i].push_back(minor_dst);
-				num_clients_added++;
-				i--;
-				continue;
-
-
-				//valid = true;
-			}
-
-			//cout << "não pode entrar aqui" << endl;
-		}
-		else //metodo aleatorio
-		{
-		
-
-
-			do
-			{
-				int new_ID = (rand() % p->get_num_clients() + 1);//cria valores aleatorios
-
-
-				not_used_IDs.clear();
-				//cout << "Todos:" << endl;
-				for (int j = 1; j < p->get_num_clients() + 1; j++)
-				{
-					not_used_IDs.push_back(j);
-					//cout << not_used_IDs.at(j - 1) << ",";
-
-				}
-
-				not_used_IDs = calculate_diference(&not_used_IDs, &used_IDs);
-				//cout << endl << "not_used:" << endl;
-				//for (int j = 0; j < not_used_IDs.size(); j++)
-				//{
-				//	cout << not_used_IDs[j] << ",";
-				//}
-				//cout << endl;
-
-				if (used_IDs.size() == p->get_num_clients() - 1 || not_used_IDs.size() == 0)
-				{
-					//	cout << "encheu" << endl;
-					valid = true;
-					greedy = false;
-					break;
-				}
-				if (find(used_IDs.begin(), used_IDs.end(), new_ID) == used_IDs.end() && new_ID != 0)
-				{
-					//verificar capacidade
-					//cout << "eh inedito" << endl;
-					if (acum_demand + p->get_client(new_ID)->get_demand() > p->get_capacity())
-					{
-						//	cout << "demanda notok "<< endl;
-						cont_choosen_random_cl++;
-						//procura por até 10 clientes para adicionar, caso nao consiga achar
-						//um válido passa para o próximo veículo.
-						if (cont_choosen_random_cl > 10)
-						{
-							cont_choosen_random_cl = 0;
-							valid = false;
-							break;
-						}
-					}
-					else
-					{
-						//	cout << "demanda ok" << endl;
-						acum_demand += p->get_client(new_ID)->get_demand();
-						used_IDs.push_back(new_ID);// adiciona o incice no vetor de indices usados
-						temp_sol[i].push_back(new_ID);
-						num_clients_added++;
-						i--;
-						break;
-						//valid = true;
-					}
-
-				}
-				else
-				{
-					valid = false;
-				}
-				//cout << "preso while" << endl;
-			} while (!valid);
-			//cout << "preso for" << endl;
-		}
-	}
-	actual_vehicle = p->get_num_vehicle();
-
-	//cout << "saiu e ficou assim" << endl;
-
-			//para os clientes restantes
-
-	while (num_clients_added < p->get_num_clients())//verificar numero de clientes no fim
-	{
-		cont_choosen_random_cl = 0;
-
-		do
-		{
-			int new_ID = (rand() % p->get_num_clients() + 1);//cria valores aleatorios
-			if (num_clients_added == p->get_num_clients())
-			{
-				break;
-			}
-			if (find(used_IDs.begin(), used_IDs.end(), new_ID) == used_IDs.end() && new_ID != 0)
-			{
-				//verificar capacidade
-				if (added == 0)
-				{
-
-					acum_demand = 0;
-				}
-				else
-				{
-					acum_demand = 0;
-					for (int k = 0; k < temp_sol[actual_vehicle].size(); k++)
-					{
-						acum_demand += p->get_client(temp_sol[actual_vehicle][k])->get_demand();
-					}
-				}
-
-				if (acum_demand + p->get_client(new_ID)->get_demand() > p->get_capacity())
-				{
-
-					cont_choosen_random_cl++;
-					//procura por até três clientes para adicionar, caso nao consiga achar
-					//um válido passa para o próximo veículo.
-					if (cont_choosen_random_cl > 10)
-					{
-						actual_vehicle++;
-						added = 0;
-						valid = false;
-
-					}
-				}
-				else
-				{
-					if (added == 0)
-					{
-
-
-						used_IDs.push_back(new_ID);// adiciona o incice no vetor de indices usados
-						temp_route.clear();
-						temp_route.push_back(new_ID);
-						temp_sol.push_back(temp_route);
-						num_clients_added++;
-						added++;
-
-					}
-					else
-					{
-
-						used_IDs.push_back(new_ID);// adiciona o incice no vetor de indices usados
-						temp_sol[actual_vehicle].push_back(new_ID);
-						num_clients_added++;
-
-					}
-
-
-
-
-
-
-
-				}
-
-			}
-			else
-			{
-				valid = false;
-			}
-
-		} while (!valid);
-	}
-	S = new ISolution(p->get_num_clients(), actual_vehicle + 1);
-
-	for (int i = 0; i < actual_vehicle + 1; i++)
-	{
-
-		S->set_route_size(i, temp_sol[i].size());
-		temp_route_aux = new int[temp_sol[i].size()];
-
-		for (int k = 0; k < temp_sol[i].size(); k++)
-		{
-
-			temp_route_aux[k] = temp_sol[i][k];
-
-		}
-
-		S->set_route(i, temp_route_aux, temp_sol[i].size());
-		delete[] temp_route_aux;
-	}
-	//printaSolucao(*p,*S);
-	//system("PAUSE");
-	//cout << p->obj1(S) << endl;
-	//cout << p->obj2(S, S->get_dist_travel()) << endl;
-	if (!p->constraint_vehicle_capacity(*S))
-	{
-		cout << "Capacidade excedida" << endl;
-		system("PAUSE");
-	}
-
-	S->set_obj1_cost(p->obj1(S));
-	S->set_obj2_freshness(p->obj2(S, S->get_dist_travel()));
-
-	return *S;
-}
-
-int SMSemoa::find_minor_DST(Problem p, int last_added, vector<int>* not_used_IDs, KmeansST * kmeans_ST)
-{
-
-		float minor = 10;
-		float m1 = 0, m2 = 0;
-		int pos_minor = 0;
-
-
-		for (int i = 0; i < not_used_IDs->size(); i++)
-		{
-
-			m1 = kmeans_ST->Calculate_Spatial_Temporal_Distance_Pair(p, *p.get_client(last_added), *p.get_client(not_used_IDs->at(i)));
-
-			if (m1 < minor)
-			{
-				minor = m1;
-				pos_minor = not_used_IDs->at(i);
-			}
-		}
-
-		return pos_minor;
-	
 }
 
 //METODOS DO NSGA
@@ -900,7 +195,7 @@ void SMSemoa::binary_tournament(Problem p, Population pop, int * father1, int * 
 	}
 }
 
-void SMSemoa::crossover_OX(Problem p, ISolution father1, ISolution father2, Population * pop2)
+void SMSemoa::crossover_OX(Problem p, ISolution father1, ISolution father2, Population * pop1)
 {
 	int pos_cut1 = 0, pos_cut2 = 0;
 	int *Seq_f1 = new int[p.get_num_clients()];
@@ -1207,8 +502,19 @@ void SMSemoa::crossover_OX(Problem p, ISolution father1, ISolution father2, Popu
 	son1->set_obj2_freshness(p.obj2(son1, son1->get_dist_travel()));
 	son2->set_obj1_cost(p.obj1(son2));
 	son2->set_obj2_freshness(p.obj2(son2, son2->get_dist_travel()));
-	pop2->add_individual(son1);
-	pop2->add_individual(son2);
+
+	//selecionar um dos filhos e adicionar na pop 1
+
+	if (randomic(0, 1) > 0.5)
+	{
+		pop1->add_individual(son1);
+	}
+	else
+	{
+		pop1->add_individual(son2);
+	}
+
+	
 }
 
 void SMSemoa::mutation(Problem p, Population *pop)
@@ -1219,7 +525,7 @@ void SMSemoa::mutation(Problem p, Population *pop)
 	int *pathi, *pathj;
 	int aux;
 	ISolution *ISaux;
-	for (int i = 0; i < pop->get_max_size(); i++)
+	for (int i = pop->get_max_size(); i < pop->get_max_size()+1; i++)
 	{
 
 
@@ -1506,31 +812,32 @@ void SMSemoa::order_matrix_CD(float ** M, int F)
 
 void SMSemoa::non_dominated_sort(Problem p, Population *p1)
 {
+
 	fronts.clear();
-	ind_front = new int[num_ind * 2];
+	ind_front = new int[num_ind+1];
 	//vetor onde cada posição possui quantos dominam o individuo i
-	bool** dominate = new bool*[p1->get_max_size() * 2];
+	bool** dominate = new bool*[p1->get_max_size()+1];
 	//vetor que possui em cada posicao um vetor dos individuos em que i dominam
 	int pos_dominate = 0;
 	vector <int> dom_aux;
 	vector<ISolution> sol_front_aux;
 	int actual_front = 0;
 	int actual_ind_dominate = 0;
-
-	for (int i = 0; i < p1->get_max_size() * 2; i++)
+	
+	for (int i = 0; i < p1->get_max_size()+1; i++)
 	{
-		dominate[i] = new bool[p1->get_max_size() * 2];
-		for (int j = 0; j < p1->get_max_size() * 2; j++)
+		dominate[i] = new bool[p1->get_max_size()+1];
+		for (int j = 0; j < p1->get_max_size()+1; j++)
 		{
 			dominate[i][j] = false;
 		}
 	}
-
+	
 	//verificando dominancia entre todos os individuos da populacao
-	for (int i = 0; i < p1->get_max_size() * 2; i++)
+	for (int i = 0; i < p1->get_max_size()+1; i++)
 	{
 		ind_front[i] = 0;
-		for (int j = 0; j < p1->get_max_size() * 2; j++)
+		for (int j = 0; j < p1->get_max_size()+1; j++)
 		{
 			if (i != j)
 			{
@@ -1576,7 +883,7 @@ void SMSemoa::non_dominated_sort(Problem p, Population *p1)
 
 			sol_front_aux.clear();
 
-			for (int k = 0; k < p1->get_max_size() * 2; k++)
+			for (int k = 0; k < p1->get_max_size()+1; k++)
 			{
 
 
@@ -1609,51 +916,92 @@ void SMSemoa::non_dominated_sort(Problem p, Population *p1)
 		actual_front++;
 	}
 
-
-	for (int i = 0; i < p1->get_max_size() * 2; i++)
+	for (int i = 0; i < p1->get_max_size()+1; i++)
 	{
 		delete[] dominate[i];
 	}
 	delete[] dominate;
 	delete[] ind_front;
+	
 }
 
-void SMSemoa::selection(Problem p, Population *p1, Population *p2)
+
+void SMSemoa::discard_worst_HV_solution(vector<ISolution> front)
+{
+	int i = 0;
+	Tsol aux;
+	Hipervolume hv;
+	float minor_HV=99999;
+	float pos_minor=-1;
+	float temp = 0;
+	for (i = 0; i < front.size(); i++)
+	{
+		aux.ob1 = front.at(i).get_obj1_cost();
+		aux.ob2 = front.at(i).get_inv_obj2_freshness();
+
+		temp = hv.Area_unique_Solution(aux);
+
+		if (temp < minor_HV)
+		{
+			minor_HV = temp;
+			pos_minor = i;
+		}
+	}
+
+	pop_1.remove_individual(&front.at(pos_minor));
+
+	front.erase(front.begin() + pos_minor);
+
+	
+
+}
+void SMSemoa::selection(Problem p, Population *p1)
 {
 	FILE *a1, *a2;
 	int ind_surv = 0;
 	//unificar populacoes
 
-	p1->uni_pops(p2);
-
-	p1->reset_ident();
+	//p1->uni_pops(p2);
+	
+	p1->reset_ident_SMSEMOA();
 
 	non_dominated_sort(p, p1);
 
-	crowding_distance_sort(p, p1);
+
+	//Analisar se realmente nao e necessário a CD
+	//crowding_distance_sort(p, p1);
+	
 	for (int i = 0; i < fronts.size(); i++)
 	{
-		for (int j = 0; j < fronts.at(i).size(); j++)
+		//Se houver somente um front
+		if ((int)fronts.size() == 1)
 		{
-			if (ind_surv < num_ind)
-			{
-				surv_pop.add_individual(&fronts.at(i).at(j));
-				ind_surv++;
-			}
-			if (((int)fronts.at(i).size() - (num_ind - ind_surv)) > 0 && num_ind - ind_surv != 0)
-			{
+		
+			//HV e descartar o pior diretamente na pop_1
+			discard_worst_HV_solution(fronts.at(0));
 
-				crowding_distance_selection(p, i, ind_surv);
-				break;
-			}
-			if (ind_surv >= num_ind)
-			{
-				break;
-			}
-
+			break;
+		}
+		//se não se o ultimo front tiver somente uma solução 
+		else if (fronts.at(fronts.size() - 1).size() == 1)
+		{
+			//descartar  diretamente na pop_1
+			
+			pop_1.remove_individual(&fronts.at(fronts.size() - 1).at(0));
+		
+			fronts.at(fronts.size() - 1).clear();
+			break;
+		}
+		//se houver mais de uma soluçao no ultimo front
+		else{
+			
+			discard_worst_HV_solution(fronts.at(fronts.size()-1));
+		
+			//HV e descartar o pior  diretamente na pop_1
 		}
 
 	}
+
 
 }
 
@@ -1661,6 +1009,7 @@ void SMSemoa::selection(Problem p, Population *p1, Population *p2)
 
 void SMSemoa::execute_SMSEMOA(Problem p,FILE* a1)
 {
+	Hipervolume hv;
 	int actual_gen = 0;
 	actual_num_sons = 0;
 	generate_Population(p, num_ind);
@@ -1668,56 +1017,38 @@ void SMSemoa::execute_SMSEMOA(Problem p,FILE* a1)
 	while (actual_gen <= num_generation)
 	{
 		int f1 = 0, f2 = 0;
-		while (actual_num_sons < num_ind)
-		{
-			binary_tournament(p, pop_1, &f1, &f2, num_generation);
 
-			if (randomic(0, 1) < prob_crossover)
+		//gerar 2 filhos e selecionar 1
+		cout << "BN ";
+		binary_tournament(p, pop_1, &f1, &f2, num_generation);
+		cout << "COX ";
+		crossover_OX(p, *pop_1.get_individual(f1), *pop_1.get_individual(f2), &pop_1);
+		cout << "MUT ";
+		mutation(p, &pop_1);
+		cout << "EVA ";
+		evaluate_population(p, &pop_1);
+	
+		//evaluate_population(p, &pop_2);
+		cout << "SEL ";
+		selection(p, &pop_1);
+		cout << "Fim gen" << endl;
+		hv_all_generations.push_back(hv.Smetric_per_front(p, fronts.at(0)));
+
+		if (actual_gen == num_generation)
+		{
+			for (int i = 0; i < hv_all_generations.size(); i++)
 			{
-				crossover_OX(p, *pop_1.get_individual(f1), *pop_1.get_individual(f2), &pop_2);
-				actual_num_sons += 2;
+				cout << hv_all_generations.at(i)<<endl;
+			}
+
+			if ((hv_all_generations.at(num_generation - 1) - hv_all_generations.at(num_generation - 11))> 100)
+			{
+				actual_gen = 0;
+				cout << "nao convergiu" << endl;
+				system("PAUSE");
 			}
 		}
 
-		if (randomic(0, 1) < prob_mutation)
-		{
-			mutation(p, &pop_2);
-		}
-	
-		evaluate_population(p, &pop_1);
-	
-		evaluate_population(p, &pop_2);
-	
-		selection(p, &pop_1, &pop_2);
-	
-		for (int i = 0; fronts.size(); i++)
-		{
-		
-			
-		   remove_minor_HV(p, i);
-		   cout << "removeu" << endl;
-			add_new_ind_per_front(p, i);
-			cout << "adicionou" << endl;
-		}
-		
-		for (int i = 0; i < fronts.at(0).size(); i++)
-		{
-
-			float ob1 = fronts.at(0).at(i).get_obj1_cost();
-			float ob2 = fronts.at(0).at(i).get_inv_obj2_freshness();
-			fwrite(&ob1, sizeof(float), 1, a1);
-			fwrite(&ob2, sizeof(float), 1, a1);
-		}
-		Smetric(p);
-		actual_num_sons = 0;
-		pop_1.clear_pop();
-
-		pop_2.clear_pop();
-
-
-		pop_1.transfer_pop(&surv_pop);
-
-		surv_pop.clear_pop();
 
 		actual_gen++;
 	}

@@ -36,6 +36,11 @@ int Population::get_max_size()
 	
 }
 
+int Population::get_actual_size()
+{
+	return (int)pop.size();
+}
+
 void Population::add_individual(ISolution * is)
 {
 	
@@ -409,6 +414,16 @@ void Population::clear_pop()
 void Population::reset_ident()
 {
 	for (int i = 0; i < max_size*2; i++)
+	{
+		pop.at(i).set_ident(i);
+	}
+}
+
+
+
+void Population::reset_ident_SMSEMOA()
+{
+	for (int i = 0; i < max_size+1; i++)
 	{
 		pop.at(i).set_ident(i);
 	}

@@ -9,10 +9,14 @@
 
 Hipervolume::Hipervolume()
 {
+	Ponto_ref.ob2 = 1.0;
+	Ponto_ref.ob1 = 6000;
 }
 
 Hipervolume::Hipervolume(float, float)
 {
+	Ponto_ref.ob2 = 1.0;
+	Ponto_ref.ob1 = 6000;
 }
 
 
@@ -24,34 +28,39 @@ float Hipervolume::Calcula_Area(vector<Tsol> *sols)
 	float A2 = 0;
 	float A_inter = 0;
 	float A_total = 0;
+
+	//Ponto de referência
 	sort(sols->begin(), sols->end(), compara);
-	Ponto_ref.ob2 = sols->at(0).ob2;
-	Ponto_ref.ob1 = sols->at(sols->size() - 1).ob1;
-	//cout << "ponto de referencia:" << Ponto_ref.ob1 << " X " << Ponto_ref.ob2 << endl;
-	vector<Tsol> inter;
+	//acrescentado mais 1 para que soluções das bordas tenham uma contribuição de 1 no HV.
+	Ponto_ref.ob2 = sols->at(0).ob2+1;
+	Ponto_ref.ob1 = sols->at(sols->size() - 1).ob1+1;
+
+	//maneira correta
+	Ponto_ref.ob2 = 1.0;
+	Ponto_ref.ob1 = 6000;
+
 	Area_PR = Ponto_ref.ob1*Ponto_ref.ob2;
+
+	vector<Tsol> inter;
+
 	for (int i = 1; i < sols->size(); i++)
 	{
 		Tsol in;
 		in.ob1 = sols->at(i).ob1;
 		in.ob2 = sols->at(i - 1).ob2;
 		inter.push_back(in);
-		//cout << in.ob1 << "|" << in.ob2 << endl;
 	}
-
 	for (int i = 0; i < sols->size(); i++)
 	{
-		A_total += sols->at(i).ob1*sols->at(i).ob2;
-		//cout << " ** "<<A_total << endl;
+		A_total += (Ponto_ref.ob1 - sols->at(i).ob1) * (Ponto_ref.ob2 - sols->at(i).ob2);
 	}
 	for (int i = 0; i < inter.size(); i++)
 	{
-		A_total -= inter.at(i).ob1*inter.at(i).ob2;
-		//cout << " ** " << A_total << endl;
+		A_total -= (Ponto_ref.ob1 - inter.at(i).ob1)*(Ponto_ref.ob2 - inter.at(i).ob2);
 	}
 	//cout << "A_total = Area_PR - A_total" << endl;
 	//cout << A_total << "=" << Area_PR << "-" << A_total << endl;
-	A_total = Area_PR - A_total;
+	//A_total = Area_PR - A_total;
 
 	return A_total;
 }
@@ -115,6 +124,7 @@ void Hipervolume::VerificaRepeticao(vector<Tsol>* sols)
 	}
 	sols->clear();
 	sols->assign(unique.begin(), unique.end());
+
 }
 
 void Hipervolume::VerificaDominancia(vector<Tsol> *sols)
@@ -147,7 +157,7 @@ void Hipervolume::VerificaDominancia(vector<Tsol> *sols)
 			i = -1;
 		}
 	}
-
+	
 }
 
 float Hipervolume::Smetric_per_front(Problem p, vector<ISolution> front)
@@ -161,12 +171,13 @@ float Hipervolume::Smetric_per_front(Problem p, vector<ISolution> front)
 	int pos = 0;
 	float Area_referencia, Area_instancia;
 
-	cout << "Front:" << endl << endl;
+	cout << "Front [" <<front.size()<<"]"<<endl << endl;
 	for (int i = 0; i < front.size(); i++)
 	{
 		sol_aux.ob1 = front.at(i).get_obj1_cost();
-		sol_aux.ob2 = front.at(i).get_obj2_freshness();
-		cout << sol_aux.ob1 << endl;
+		//aqui estava sendo passado o ob2 e nao o inverso
+		sol_aux.ob2 = front.at(i).get_inv_obj2_freshness();
+		cout << sol_aux.ob1 << "|";
 		cout << sol_aux.ob2 << endl;
 		sols_R.push_back(sol_aux);
 	}
@@ -179,7 +190,7 @@ float Hipervolume::Smetric_per_front(Problem p, vector<ISolution> front)
 
 
 	//cout << "Area: " << Area_referencia<<endl;
-	//hv_all_generations.push_back(Area_referencia);
+	hv_all_generations.push_back(Area_referencia);
 	//cout << hv_all_generations.at(hv_all_generations.size() - 1) << endl;
 	//cout << "Num Solucoes: " << tam;
 
@@ -187,3 +198,9 @@ float Hipervolume::Smetric_per_front(Problem p, vector<ISolution> front)
 }
 
 
+float Hipervolume::Area_unique_Solution(Tsol s)
+{
+	float Area_S = (Ponto_ref.ob1 - s.ob1)*(Ponto_ref.ob2 - s.ob2);
+
+	return Area_S;
+}

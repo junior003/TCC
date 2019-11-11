@@ -13,12 +13,9 @@
 #include <string.h>
 #include <stdio.h>
 #include "KmeansST.h"
+#include "HiperVolume.h"
 
-struct Tsol
-{
-	float ob1;
-	float ob2;
-};
+
 
 
 class SMSemoa
@@ -29,29 +26,10 @@ public:
 
 	vector<Tsol> instancia;
 	vector<float> hv_all_generations;
-	void remove_minor_HV(Problem p, int id_front);
-	void add_new_ind_per_front(Problem p, int id_front);
 
-	ISolution generate_individual_S(Problem *p);
-	int find_minor_DST(Problem p, int last_added, vector<int>* not_used_IDs, KmeansST * kmeans_ST);
 	SMSemoa(int,int,float,float);
 
-	//SMETRIC 
-	void VerificaRepeticao(vector<Tsol>* sols);
-	void VerificaDominancia(vector<Tsol>* sols);
-	float Calcula_Area(vector<Tsol>* sols);
-	float Calcula_Area_R(vector<Tsol>* sols);
-	void LerInstancia();
-	void hipervolume(float ar);
-	float Smetric(Problem p);
 
-	Tsol Create_ref_point(vector<ISolution> front);
-
-	float Smetric_per_front(Problem p, vector<ISolution> front);
-
-	float Area_unique_Solution(Problem p, Tsol s);
-
-	int Minor_HV_per_front(Problem p, vector<ISolution> front);
 
 
 	//colocar metodos do nsga aqui assim como atributos
@@ -60,7 +38,7 @@ public:
 	bool verify_domination(ISolution, ISolution);
 
 	void binary_tournament(Problem p, Population pop, int *father1, int *father2, int ngen);
-	void crossover_OX(Problem p, ISolution father1, ISolution father2, Population *pop2);
+	void crossover_OX(Problem p, ISolution father1, ISolution father2, Population *pop1);
 	void mutation(Problem p, Population* pop);
 	void crowding_distance_sort(Problem p, Population *pop);
 	void crowding_distance_selection(Problem p, int, int);
@@ -69,11 +47,13 @@ public:
 
 	void non_dominated_sort(Problem p, Population *p1);
 
-	void selection(Problem p, Population *p1, Population *p2);
+	void discard_worst_HV_solution(vector<ISolution> fronts);
+
+	void selection(Problem p, Population *p1);
 
 	void execute_SMSEMOA(Problem p, FILE* a1);
 
-	friend class NSGAII;
+	
 	friend class KmeansST;
 	friend class Population;
 
