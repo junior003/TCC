@@ -377,8 +377,7 @@ void movement_intra_route(Problem p, ISolution* S)
 	{
 		//cout << "veiculo:" << i << endl;
 
-			for (int k = 0; k < 20; k++)
-			{
+			
 				path = NULL;
 				if (S->get_route_size(i) > 1)
 				{
@@ -417,9 +416,7 @@ void movement_intra_route(Problem p, ISolution* S)
 					//cout << endl;
 				}
 
-				
-				
-			}
+			
 			
 		
 	}

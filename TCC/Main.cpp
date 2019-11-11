@@ -117,14 +117,14 @@ int main(int argc, char*argv[])
 	tamp = atoi(argv[tam_pop]);
 	ngen = atoi(argv[num_gen]);
 	
-	//NSGAII nsga(tamp,ngen, pc , pm);
-	//nsga.execute_NSGAII(*p,arq1,arq2,arq3);
+	NSGAII nsga(tamp,ngen, pc , pm);
+	nsga.execute_NSGAII(*p,arq1,arq2,arq3);
 
 
 	
 
-	SMSemoa sms(tamp, ngen, pc, pm);
-	sms.execute_SMSEMOA(*p, arq1);
+	//SMSemoa sms(tamp, ngen, pc, pm);
+	//sms.execute_SMSEMOA(*p, arq1);
 
 	high_resolution_clock::time_point t2 = high_resolution_clock::now();
 	duration<double> time_span = duration_cast<duration<double> >(t2 - t1);

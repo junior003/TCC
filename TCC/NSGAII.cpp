@@ -945,6 +945,10 @@ void NSGAII::selection(Problem p, Population *p1, Population *p2)
 
 void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 {
+	Tsol aux_BL;
+
+
+	bool melhorou = false;
 	int actual_gen=0;
 	actual_num_sons = 0;
 	//cout << "GERACAO DA POPULACAO INICIAL" << endl;
@@ -962,7 +966,46 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 			if (randomic(0, 1) < prob_crossover)
 			{
 				//pode haver melhoria aqui
+				while (!melhorou)
+				{
+					cout << "["<<aux_BL.ob1 << "*" << aux_BL.ob2 << "]";
+					aux_BL.ob1 = pop_1.get_individual(f1)->get_obj1_cost();
+					aux_BL.ob2 = pop_1.get_individual(f1)->get_obj2_freshness();
+					movement_intra_route(p, pop_1.get_individual(f1));
+					pop_1.get_individual(f1)->set_obj1_cost(p.obj1(pop_1.get_individual(f1)));
+					pop_1.get_individual(f1)->set_obj2_freshness(p.obj2(pop_1.get_individual(f1),pop_1.get_individual(f1)->get_dist_travel()));
+					
+					if (pop_1.get_individual(f1)->get_obj1_cost() < aux_BL.ob1 || pop_1.get_individual(f1)->get_obj2_freshness() > aux_BL.ob2)
+					{
+						cout <<"["<< pop_1.get_individual(f1)->get_obj1_cost() << "**"
+							<< pop_1.get_individual(f1)->get_obj2_freshness() <<"]";
+						melhorou = true;
+					}
+				}
+				cout << "melhorou" << endl;
+				melhorou = false;
 
+
+
+
+				while (!melhorou)
+				{
+					cout <<"["<< aux_BL.ob1 << "*" << aux_BL.ob2<<"]";
+					aux_BL.ob1 = pop_1.get_individual(f2)->get_obj1_cost();
+					aux_BL.ob2 = pop_1.get_individual(f2)->get_obj2_freshness();
+					movement_intra_route(p, pop_1.get_individual(f2));
+					pop_1.get_individual(f2)->set_obj1_cost(p.obj1(pop_1.get_individual(f2)));
+					pop_1.get_individual(f2)->set_obj2_freshness(p.obj2(pop_1.get_individual(f2), pop_1.get_individual(f2)->get_dist_travel()));
+
+					if (pop_1.get_individual(f2)->get_obj1_cost() < aux_BL.ob1 || pop_1.get_individual(f2)->get_obj2_freshness() > aux_BL.ob2)
+					{
+						cout <<"["<< pop_1.get_individual(f2)->get_obj1_cost() << "**"
+							<< pop_1.get_individual(f2)->get_obj2_freshness() <<"]";
+						melhorou = true;
+					}
+				}
+				cout << "melhorou" << endl;
+				melhorou = false;
 				
 				//cout << "CROSSOVER" << endl;
 				
