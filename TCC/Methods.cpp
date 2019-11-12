@@ -368,7 +368,8 @@ float mini(float a, float b)
 	
 }
 
-void movement_intra_route(Problem p, ISolution* S)
+
+void movement_intra_route(Problem p, ISolution* S)//trocas dentro da mesma rota
 {
 	int pi = 0,pj=0;
 	int *path;
@@ -377,44 +378,48 @@ void movement_intra_route(Problem p, ISolution* S)
 	{
 		//cout << "veiculo:" << i << endl;
 
-			
-				path = NULL;
-				if (S->get_route_size(i) > 1)
+		//somente em 50% das vezes havera troca 
+		if (randomic(0, 1) > 0.5)
+		{
+			path = NULL;
+			if (S->get_route_size(i) > 1)
+			{
+				do
 				{
-					do
-					{
-						//cout << "gerando";
-						pi = rand() % S->get_route_size(i);
-						pj = rand() % S->get_route_size(i);
-					} while (pi == pj);
+					//cout << "gerando";
+					pi = rand() % S->get_route_size(i);
+					pj = rand() % S->get_route_size(i);
+				} while (pi == pj);
 
-					//cout << "pi:" << pi << endl;
-					//cout << "pj:" << pj << endl;
+				//cout << "pi:" << pi << endl;
+				//cout << "pj:" << pj << endl;
 
-					path = S->get_path_Sol(i, S->get_route_size(i));
-					/*
-					for (int j = 0; j < S->get_route_size(i); j++)
-					{
-						cout << path[j] << ".";
-					}
-					cout << endl;
-					*/
-					aux = path[pi];
-					//cout << "{" << aux << "," << path[pi] << "}" << endl;
-					path[pi] = path[pj];
-					//cout << "{" << path[pi] << "," << path[pj] << "}" << endl;
-					path[pj] = aux;
-					//cout << "{" << path[pj] << "," << aux << "}" << endl;
-					S->substitute_route(i, path, S->get_route_size(i));
-					//S->set_route(i, path, S->get_route_size(i));
-					//path = NULL;
-					//path = S->get_path_Sol(i, S->get_route_size(i));
-					//for (int j = 0; j < S->get_route_size(i); j++)
-					//{
-						//cout << path[j] << ".";
-					//}
-					//cout << endl;
+				path = S->get_path_Sol(i, S->get_route_size(i));
+				/*
+				for (int j = 0; j < S->get_route_size(i); j++)
+				{
+					cout << path[j] << ".";
 				}
+				cout << endl;
+				*/
+				aux = path[pi];
+				//cout << "{" << aux << "," << path[pi] << "}" << endl;
+				path[pi] = path[pj];
+				//cout << "{" << path[pi] << "," << path[pj] << "}" << endl;
+				path[pj] = aux;
+				//cout << "{" << path[pj] << "," << aux << "}" << endl;
+				S->substitute_route(i, path, S->get_route_size(i));
+				//S->set_route(i, path, S->get_route_size(i));
+				//path = NULL;
+				//path = S->get_path_Sol(i, S->get_route_size(i));
+				//for (int j = 0; j < S->get_route_size(i); j++)
+				//{
+					//cout << path[j] << ".";
+				//}
+				//cout << endl;
+			}
+		}
+				
 
 			
 			
@@ -423,13 +428,14 @@ void movement_intra_route(Problem p, ISolution* S)
 
 }
 
+//troca entre de dois clientes de rotas diferentes
 void movement_inter_route(Problem p, ISolution *S)
 {
 	int ri = 0, rj = 0, pi = 0, pj = 0;
 	int *pathi,*pathj;
 	int aux;
 
-		for (int k = 0; k < 30; k++)
+		for (int k = 0; k < 5; k++)
 		{
 
 			do

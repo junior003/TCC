@@ -127,6 +127,7 @@
     <ClInclude Include="Population.h" />
     <ClInclude Include="Problem.h" />
     <ClInclude Include="SMSEMOA.h" />
+    <ClInclude Include="VNS.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Cluster.cpp" />
@@ -142,6 +143,7 @@
     <ClCompile Include="Population.cpp" />
     <ClCompile Include="Problem.cpp" />
     <ClCompile Include="SMSEMOA.cpp" />
+    <ClCompile Include="VNS.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
