@@ -1,4 +1,5 @@
-
+#include <math.h>
+#include <vector>
 
 
 
@@ -6,17 +7,17 @@
 #define ISOLUTION_H
 
 
-#include <math.h>
-
-#include <vector>
 using namespace std;
 class ISolution
 {
 
 
 public:
-
+	ISolution();
+	~ISolution();
 	ISolution(int, int);//construtor sem solucao pronta
+
+	void operator=(ISolution s);
 	//sobreescrever operador igual
 
 
@@ -59,6 +60,8 @@ public:
 	void set_ident(int);
 	void reset_ident();
 
+
+
 private:
 	int id;
 	int num_vehicles_in_S;
@@ -71,7 +74,6 @@ private:
 
 	float crownding_dist_obj1;
 	float crownding_dist_obj2;
-
 
 };
 

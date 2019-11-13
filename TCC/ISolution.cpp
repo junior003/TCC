@@ -1,6 +1,16 @@
 #include "ISolution.h"
 int ident = 0;
 
+ISolution::ISolution()
+{
+	this->route_sizes = nullptr;
+}
+
+ISolution::~ISolution()
+{
+
+}
+
 ISolution::ISolution(int nc, int nv)
 {
 	
@@ -8,6 +18,53 @@ ISolution::ISolution(int nc, int nv)
 	set_num_vehicles_in_S(nv);
 	route_sizes = new int[nv];
 	distance_traveled = 0;
+}
+
+void ISolution::operator=(ISolution s)
+{
+	int i = 0;
+	this->id = s.id;
+	this->num_vehicles_in_S = s.num_vehicles_in_S;
+	
+	vector<int> rout_aux;
+
+	if (this->route_sizes == nullptr)
+	{
+		this->route_sizes = new int[this->num_vehicles_in_S];
+		for (i = 0; i < this->num_vehicles_in_S; i++)
+		{
+			this->route_sizes[i] = s.route_sizes[i];
+		}
+	}
+	else
+	{
+		delete[] this->route_sizes;
+		this->route_sizes = new int[this->num_vehicles_in_S];
+		for (i = 0; i < this->num_vehicles_in_S; i++)
+		{
+			this->route_sizes[i] = s.route_sizes[i];
+		}
+	}
+
+	for (i = 0; i < this->sol_path.size(); i++)
+	{
+
+		this->sol_path.at(i).clear();
+	}
+	this->sol_path.clear();
+
+	for (i = 0; i < s.sol_path.size(); i++)
+	{
+		this->sol_path.push_back(s.sol_path.at(i));
+	}
+	
+	
+	this->obj1_cost = s.obj1_cost;
+	this->obj2_freshness = s.obj2_freshness;
+	this->inv_obj2_freshness = s.inv_obj2_freshness;
+	this->distance_traveled = s.distance_traveled;
+	this->crownding_dist_obj1 = s.crownding_dist_obj1;
+	this->crownding_dist_obj2 = s.crownding_dist_obj2;
 }
 
 

@@ -949,12 +949,17 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 {
 	Tsol aux_BL;
 	VNS vns(100);
-
+	ISolution X;
 	bool melhorou = false;
 	int actual_gen=0;
 	actual_num_sons = 0;
-	//cout << "GERACAO DA POPULACAO INICIAL" << endl;
+	cout << "GERACAO DA POPULACAO INICIAL" << endl;
 	generate_Population(p, num_ind);
+
+
+
+	//fim do teste
+
 	Hipervolume hv;
 	while (actual_gen < num_generation)
 	{
@@ -970,9 +975,9 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 				//pode haver melhoria aqui
 				
 				
-				vns.execute_VNS(p, *pop_1.get_individual(f1));
-				cout << "Terminou VNS" << endl;
-				system("PAUSE");
+				//vns.execute_VNS(p, *pop_1.get_individual(f1));
+				//cout << "Terminou VNS" << endl;
+				//system("PAUSE");
 				
 				//cout << "CROSSOVER" << endl;
 				
@@ -992,6 +997,15 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 			
 			mutation(p, &pop_2);
 		}
+
+
+
+
+		
+
+
+
+
 		//cout << "EVALUATE" << endl;
 		//cout << "EV |";
 		evaluate_population(p, &pop_1);
@@ -1003,6 +1017,77 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 		selection(p, &pop_1, &pop_2);
 	
 			
+
+
+		evaluate_population(p, &pop_1);
+		cout << "populacao avaliada" << endl;
+		//teste de operador igual
+		cout << "id:" << pop_1.get_individual(4)->get_id() << endl;
+		cout << "numv:" << pop_1.get_individual(4)->get_num_vehicles_in_S() << endl;
+		cout << "dist_travel:" << pop_1.get_individual(4)->get_dist_travel() << endl;
+
+		int cont = 0;
+		for (int i = 0; i < pop_1.get_individual(4)->get_num_vehicles_in_S(); i++)
+		{
+			cout << "veiculo " << i << ":";
+			cout << "[";
+			for (int j = 0; j < pop_1.get_individual(4)->get_route_size(i); j++)
+			{
+				cout << p.get_client(pop_1.get_individual(4)->get_client_id_on_route(i, j))->get_id() << ".";
+				cont++;
+			}
+			cout << "]      ";
+		}
+		cout << "numero de clientes na solucao:" << cont << endl;
+
+		for (int i = 0; i < pop_1.get_individual(4)->get_num_vehicles_in_S(); i++)
+		{
+			cout << pop_1.get_individual(4)->get_route_size(i) << "|";
+		}
+		cout << "obj1: " << pop_1.get_individual(4)->get_obj1_cost() << endl;
+		cout << "obj2: " << pop_1.get_individual(4)->get_obj2_freshness() << endl;
+		cout << "obj1 CD:" << pop_1.get_individual(4)->get_CD_obj1() << endl;
+		cout << "obj2 CD:" << pop_1.get_individual(4)->get_CD_obj2() << endl;
+
+
+
+
+
+		X = *pop_1.get_individual(4);
+
+
+		cout << "ID: " << X.get_id() << endl;
+		cout << "numv: " << X.get_num_vehicles_in_S() << endl;
+		cout << "dist_travel: " << X.get_dist_travel() << endl;
+
+		cont = 0;
+		for (int i = 0; i < X.get_num_vehicles_in_S(); i++)
+		{
+			cout << "veiculo " << i << ":" << endl;
+			cout << "[";
+			for (int j = 0; j < X.get_route_size(i); j++)
+			{
+				cout << p.get_client(X.get_client_id_on_route(i, j))->get_id() << ".";
+				cont++;
+			}
+			cout << "]      ";
+		}
+		cout << "numero de clientes na solucao:" << cont << endl;
+
+		for (int i = 0; i < X.get_num_vehicles_in_S(); i++)
+		{
+			cout << X.get_route_size(i) << "|";
+		}
+		cout << endl;
+		cout << "obj1: " << X.get_obj1_cost() << endl;
+		cout << "obj2: " << X.get_obj2_freshness() << endl;
+		cout << "CDobj1: " << X.get_CD_obj1() << endl;
+		cout << "CDobj2: " << X.get_CD_obj2() << endl;
+
+
+
+		system("PAUSE");
+
 			/*
 			for (int i = 0; i < fronts.at(0).size(); i++)
 			{

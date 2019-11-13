@@ -29,11 +29,14 @@ int main(int argc, char*argv[])
 	FILE *arq1;
 	FILE *arq2;
 	FILE *arq3;
+
 	remove(argv[output_file1]);
 	if ((arq1 = fopen(argv[output_file1], "ab")) == NULL)
 	{
+
 		cout << "erro ao abrir o arquivo";
 		return 0;
+
 	}
 
 
@@ -75,10 +78,11 @@ int main(int argc, char*argv[])
 	}
 
 	fclose(arq2);
+		
+	
+	/*
 
-	
-	
-	/*if ((arq2 = fopen("TEST.bin", "rb")) == NULL)
+	if ((arq2 = fopen("TEST.bin", "rb")) == NULL)
 	{
 		cout << "erro ao abrir o arquivo TEST";
 		return 0;
@@ -94,14 +98,17 @@ int main(int argc, char*argv[])
 		fread(&aux2, sizeof(float), 1, arq2);
 		cout << "Obj1: " << aux1 << endl;
 		cout << "Obj2: " << aux2 << endl<<endl;
-
 	}
+
 	*/
 
 	//K-means utilizando distancia euclidiana
 	//KmeansS kmeans(p->get_num_vehicle(), p->get_num_clients(), 2);
 	//kmeans.execute_kmeans_S(p);
 	//sols = build_solutions_space_or_timewindow_sort_S(p, &kmeans, 1);
+
+	
+
 	//printaSolucao(*p, sols.at(0));
 	//K-means utilizando distancia espaco-temporal
 	//KmeansST kmeans_ST(*p, p->get_num_vehicle(), 0.5, 0.5, 1, 1.5, 2);
@@ -116,7 +123,7 @@ int main(int argc, char*argv[])
 	pm = ((float)atoi(argv[prob_mut])) / 100.0;
 	tamp = atoi(argv[tam_pop]);
 	ngen = atoi(argv[num_gen]);
-	
+	cout << "1" << endl;
 	NSGAII nsga(tamp,ngen, pc , pm);
 	nsga.execute_NSGAII(*p,arq1,arq2,arq3);
 
