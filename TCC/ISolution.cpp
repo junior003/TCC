@@ -1,14 +1,16 @@
 #include "ISolution.h"
+#include <iostream>
 int ident = 0;
 
 ISolution::ISolution()
 {
 	this->route_sizes = nullptr;
+	this->num_vehicles_in_S = 0;
 }
 
 ISolution::~ISolution()
 {
-
+	
 }
 
 ISolution::ISolution(int nc, int nv)
@@ -24,12 +26,13 @@ void ISolution::operator=(ISolution s)
 {
 	int i = 0;
 	this->id = s.id;
-	this->num_vehicles_in_S = s.num_vehicles_in_S;
+	
 	
 	vector<int> rout_aux;
 
-	if (this->route_sizes == nullptr)
+	if (this->num_vehicles_in_S == 0)
 	{
+		this->num_vehicles_in_S = s.num_vehicles_in_S;
 		this->route_sizes = new int[this->num_vehicles_in_S];
 		for (i = 0; i < this->num_vehicles_in_S; i++)
 		{
@@ -38,6 +41,7 @@ void ISolution::operator=(ISolution s)
 	}
 	else
 	{
+		this->num_vehicles_in_S = s.num_vehicles_in_S;
 		delete[] this->route_sizes;
 		this->route_sizes = new int[this->num_vehicles_in_S];
 		for (i = 0; i < this->num_vehicles_in_S; i++)
@@ -46,7 +50,8 @@ void ISolution::operator=(ISolution s)
 		}
 	}
 
-	for (i = 0; i < this->sol_path.size(); i++)
+	this->sol_path = s.sol_path;
+	/*for (i = 0; i < this->sol_path.size(); i++)
 	{
 
 		this->sol_path.at(i).clear();
@@ -57,7 +62,7 @@ void ISolution::operator=(ISolution s)
 	{
 		this->sol_path.push_back(s.sol_path.at(i));
 	}
-	
+	*/
 	
 	this->obj1_cost = s.obj1_cost;
 	this->obj2_freshness = s.obj2_freshness;

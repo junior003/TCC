@@ -32,6 +32,7 @@ public:
 	void reset_ident_SMSEMOA();
 private:
 	friend class KmeansST;
+	friend class NSGAII;
 	int max_size;
 	vector<ISolution> pop;
 	int actual_size;

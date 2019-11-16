@@ -10,6 +10,7 @@
 #include "NSGAII.h"
 #include "SMSEMOA.h"
 #include "HiperVolume.h"
+#include "VNS.h"
 #include <iomanip>
 #include <vector>
 #include <time.h>

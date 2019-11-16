@@ -54,6 +54,7 @@ void NSGAII::evaluate_population(Problem p,Population *pop)
 	
 	for (int i = 0; i < pop->get_max_size(); i++)
 	{
+		cout << "X" << endl;
 		pop->get_individual(i)->set_obj1_cost(p.obj1(pop->get_individual(i)));
 		pop->get_individual(i)->set_obj2_freshness(p.obj2(pop->get_individual(i),
 														 pop->get_individual(i)->get_dist_travel()));
@@ -195,7 +196,7 @@ void NSGAII::crossover_OX(Problem p,ISolution father1, ISolution father2, Popula
 	int *Seq_s1 = new int[p.get_num_clients()];
 	int *Seq_s2 = new int[p.get_num_clients()];
 	vector<int> alocated_cl_s1, alocated_cl_s2;
-	
+	//cout << "1" << endl;
 	//converter os pais para um vetor
 	int added = 0,added_s1 = 0,added_s2=0;
 	int *route_f1;
@@ -211,7 +212,7 @@ void NSGAII::crossover_OX(Problem p,ISolution father1, ISolution father2, Popula
 		route_f1 = NULL;
 	}
 
-	
+	//cout << "2" << endl;
 
 	added = 0;
 	for (int i = 0; i < father2.get_num_vehicles_in_S(); i++){
@@ -225,12 +226,12 @@ void NSGAII::crossover_OX(Problem p,ISolution father1, ISolution father2, Popula
 		route_f2 = NULL;
 	}
 	
-
+	//cout << "3" << endl;
 
 	
 
 	//cortar
-	
+	//cout << "4" << endl;
 	do
 	{
 		pos_cut1 = rand() % p.get_num_clients();
@@ -246,7 +247,7 @@ void NSGAII::crossover_OX(Problem p,ISolution father1, ISolution father2, Popula
 		cutf2[j] = Seq_f2[i];
 	}
 
-	
+	//cout << "5" << endl;
 	//passar para os filhos
 	
 	for (int i = pos_cut1, j = 0; i < pos_cut2 + 1; i++, j++)
@@ -258,6 +259,7 @@ void NSGAII::crossover_OX(Problem p,ISolution father1, ISolution father2, Popula
 	//repasse de genes sem repeticao
 	//primeira etapa
 	//FILHO 1
+	//cout << "6" << endl;
 	bool repeated = false;
 	added_s1 = pos_cut2 + 1;
 	for (int i = pos_cut2 + 1; i < p.get_num_clients(); i++)
@@ -282,7 +284,7 @@ void NSGAII::crossover_OX(Problem p,ISolution father1, ISolution father2, Popula
 	}
 
 
-
+	//cout << "7" << endl;
 	for (int i = 0; i < pos_cut2+1; i++)
 	{
 		for (int j = 0; j < pos_cut2 - pos_cut1 + 1; j++)
@@ -307,7 +309,7 @@ void NSGAII::crossover_OX(Problem p,ISolution father1, ISolution father2, Popula
 			Seq_s1[added_s1++] = Seq_f2[i];
 		}
 	}
-
+	//cout << "8" << endl;
 	//FILHO 2
 	//primeira etapa
 	repeated = false;
@@ -358,7 +360,7 @@ void NSGAII::crossover_OX(Problem p,ISolution father1, ISolution father2, Popula
 	}
 
 
-	
+	//cout << "9" << endl;
 	int* Seq_v_allocated_s1 = new int[p.get_num_clients()];
 	int acum_demand = 0;
 	int cont_num_v = 1;
@@ -379,7 +381,7 @@ void NSGAII::crossover_OX(Problem p,ISolution father1, ISolution father2, Popula
 	cont_route_sizes = new int[cont_num_v];
 	acum_demand = 0;
 	cont_route_sizes[actual_vehicle] = 0;
-
+	//cout << "10" << endl;
 	for (int i = 0; i < p.get_num_clients(); i++)
 	{
 		if (acum_demand + p.get_client(Seq_s1[i])->get_demand() > p.get_capacity())
@@ -400,7 +402,7 @@ void NSGAII::crossover_OX(Problem p,ISolution father1, ISolution father2, Popula
 		}
 	}
 	int actual_client = -1;
-
+	//cout << "11" << endl;
 	ISolution *son1 = new ISolution(p.get_num_clients(), cont_num_v);
 	son1->reset_ident();
 	for (int i = 0; i < cont_num_v; i++)
@@ -424,7 +426,7 @@ void NSGAII::crossover_OX(Problem p,ISolution father1, ISolution father2, Popula
 	}
 	
 	delete[] cont_route_sizes;
-	
+	//cout << "12" << endl;
 	int* Seq_v_allocated_s2 = new int[p.get_num_clients()];
 	 acum_demand = 0;
 	 cont_num_v = 1;
@@ -445,7 +447,7 @@ void NSGAII::crossover_OX(Problem p,ISolution father1, ISolution father2, Popula
 	cont_route_sizes = new int[cont_num_v];
 	acum_demand = 0;
 	cont_route_sizes[actual_vehicle] = 0;
-
+	//cout << "13" << endl;
 	for (int i = 0; i < p.get_num_clients(); i++)
 	{
 		if (acum_demand + p.get_client(Seq_s2[i])->get_demand() > p.get_capacity())
@@ -466,7 +468,7 @@ void NSGAII::crossover_OX(Problem p,ISolution father1, ISolution father2, Popula
 		}
 	}
 	actual_client = -1;
-
+	//cout << "14" << endl;
 	ISolution *son2 = new ISolution(p.get_num_clients(), cont_num_v);
 
 	for (int i = 0; i < cont_num_v; i++)
@@ -489,7 +491,7 @@ void NSGAII::crossover_OX(Problem p,ISolution father1, ISolution father2, Popula
 		delete[] route_temp;
 	}
 	
-
+	//cout << "3" << endl;
 	son1->set_obj1_cost(p.obj1(son1));
 	son1->set_obj2_freshness(p.obj2(son1, son1->get_dist_travel()));
 	son2->set_obj1_cost(p.obj1(son2));
@@ -546,8 +548,6 @@ void NSGAII::mutation(Problem p, Population *pop)
 			pop->get_individual(i)->substitute_route(rj, pathj, pop->get_individual(i)->get_route_size(rj));
 			
 		
-			
-
 		}
 
 }
@@ -949,7 +949,7 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 {
 	Tsol aux_BL;
 	VNS vns(100);
-	ISolution X;
+	ISolution X,Y;
 	bool melhorou = false;
 	int actual_gen=0;
 	actual_num_sons = 0;
@@ -957,9 +957,25 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 	generate_Population(p, num_ind);
 
 
-
+	//teste
+	/*
+	int SS;
+	for (int i = 0; i < 10000; i++)
+	{
+		SS = randomic(0, num_ind);
+		X = *pop_1.get_individual(SS);
+		cout << SS << endl;
+		//printaSolucao(p,X);
+		Y = X;
+		movement_intra_route(p, &Y);
+		movement_inter_route(p, &Y);
+		//printaSolucao(p, Y);
+		*pop_1.get_individual(0) = Y;
+	}
+	system("PAUSE");
+	*/
 	//fim do teste
-
+	evaluate_population(p, &pop_1);
 	Hipervolume hv;
 	while (actual_gen < num_generation)
 	{
@@ -974,16 +990,24 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 			{
 				//pode haver melhoria aqui
 				
+				cout << "VNS |";
+				//movement_inter_route(p,&pop_1.pop.at(pop_1.pop.size()-1));
+				vns.execute_VNS(p, pop_1.get_individual(f1));
+				//*pop_1.get_individual(f1) = X;
+				//pop_1.remove_individual(pop_1.get_individual(f1));
+				cout << "Terminou VNS" << endl;
+				//printaSolucao(p,*pop_1.get_individual(f1));
+				//f1 = pop_1.pop.at(pop_1.pop.size() - 1).get_id();
+	
+				 
 				
-				//vns.execute_VNS(p, *pop_1.get_individual(f1));
-				//cout << "Terminou VNS" << endl;
 				//system("PAUSE");
 				
 				//cout << "CROSSOVER" << endl;
 				
-				//cout << "COOX |";
+				cout << "COOX |";
 				crossover_OX(p,*pop_1.get_individual(f1), *pop_1.get_individual(f2), &pop_2);
-
+				cout << "SONS |";
 				
 				
 				actual_num_sons += 2;
@@ -993,7 +1017,7 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 		
 		if (randomic(0, 1) < prob_mutation)
 		{
-			//cout << "MT |";
+			cout << "MT |";
 			
 			mutation(p, &pop_2);
 		}
@@ -1007,86 +1031,17 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 
 
 		//cout << "EVALUATE" << endl;
-		//cout << "EV |";
-		evaluate_population(p, &pop_1);
+		cout << "EV |";
+		
 		evaluate_population(p, &pop_2);
 		
 
 
-		//cout << "SE |";
+		cout << "SE |";
 		selection(p, &pop_1, &pop_2);
 	
 			
 
-
-		evaluate_population(p, &pop_1);
-		cout << "populacao avaliada" << endl;
-		//teste de operador igual
-		cout << "id:" << pop_1.get_individual(4)->get_id() << endl;
-		cout << "numv:" << pop_1.get_individual(4)->get_num_vehicles_in_S() << endl;
-		cout << "dist_travel:" << pop_1.get_individual(4)->get_dist_travel() << endl;
-
-		int cont = 0;
-		for (int i = 0; i < pop_1.get_individual(4)->get_num_vehicles_in_S(); i++)
-		{
-			cout << "veiculo " << i << ":";
-			cout << "[";
-			for (int j = 0; j < pop_1.get_individual(4)->get_route_size(i); j++)
-			{
-				cout << p.get_client(pop_1.get_individual(4)->get_client_id_on_route(i, j))->get_id() << ".";
-				cont++;
-			}
-			cout << "]      ";
-		}
-		cout << "numero de clientes na solucao:" << cont << endl;
-
-		for (int i = 0; i < pop_1.get_individual(4)->get_num_vehicles_in_S(); i++)
-		{
-			cout << pop_1.get_individual(4)->get_route_size(i) << "|";
-		}
-		cout << "obj1: " << pop_1.get_individual(4)->get_obj1_cost() << endl;
-		cout << "obj2: " << pop_1.get_individual(4)->get_obj2_freshness() << endl;
-		cout << "obj1 CD:" << pop_1.get_individual(4)->get_CD_obj1() << endl;
-		cout << "obj2 CD:" << pop_1.get_individual(4)->get_CD_obj2() << endl;
-
-
-
-
-
-		X = *pop_1.get_individual(4);
-
-
-		cout << "ID: " << X.get_id() << endl;
-		cout << "numv: " << X.get_num_vehicles_in_S() << endl;
-		cout << "dist_travel: " << X.get_dist_travel() << endl;
-
-		cont = 0;
-		for (int i = 0; i < X.get_num_vehicles_in_S(); i++)
-		{
-			cout << "veiculo " << i << ":" << endl;
-			cout << "[";
-			for (int j = 0; j < X.get_route_size(i); j++)
-			{
-				cout << p.get_client(X.get_client_id_on_route(i, j))->get_id() << ".";
-				cont++;
-			}
-			cout << "]      ";
-		}
-		cout << "numero de clientes na solucao:" << cont << endl;
-
-		for (int i = 0; i < X.get_num_vehicles_in_S(); i++)
-		{
-			cout << X.get_route_size(i) << "|";
-		}
-		cout << endl;
-		cout << "obj1: " << X.get_obj1_cost() << endl;
-		cout << "obj2: " << X.get_obj2_freshness() << endl;
-		cout << "CDobj1: " << X.get_CD_obj1() << endl;
-		cout << "CDobj2: " << X.get_CD_obj2() << endl;
-
-
-
-		system("PAUSE");
 
 			/*
 			for (int i = 0; i < fronts.at(0).size(); i++)
@@ -1100,10 +1055,21 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 				fwrite(&ob2,sizeof(float),1,a1);
 			}
 			*/
-
+		ISolution X;
+		if (actual_gen == num_generation)
+		{
+			cout << "melhorando ultimo front" << endl;
+			cout << "tam:" << fronts.at(0).size();
+			for (int i = 0; i < fronts.at(0).size(); i++)
+			{
+				
+				//X = vns.execute_VNS(p, fronts.at(0).at(i));
+			}
+			
+		}
 		cout<<"Hipervolume: "<<hv.Smetric_per_front(p, fronts.at(0))<<endl;
 
-		//cout << "GERACAO: " << actual_gen << endl;
+		cout << "GERACAO: " << actual_gen << endl;
 		actual_num_sons = 0;
 		pop_1.clear_pop();
 		

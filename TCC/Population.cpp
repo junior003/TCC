@@ -354,8 +354,23 @@ void Population::Generate_Random_Individual(Problem * p)
 		system("PAUSE");
 	}
 
-	S->set_obj1_cost(p->obj1(S));
-	S->set_obj2_freshness(p->obj2(S, S->get_dist_travel()));
+	float obj1j;
+	float obj2j;
+	//Possivel melhoria pode ser aplicada aqui
+/*
+	do {
+		obj1j = p->obj1(S);
+		obj2j = p->obj2(S, S->get_dist_travel());
+
+		
+
+		S->set_obj1_cost(p->obj1(S));
+		S->set_obj2_freshness(p->obj2(S, S->get_dist_travel()));
+		cout << " $ ";
+	} while (obj1j > S->get_obj1_cost() || obj2j < S->get_obj2_freshness());
+	//enquanto eu conseguir melhorar continua;
+	cout << endl;
+	*/
 	add_individual(S);
 
 }

@@ -27,8 +27,9 @@ class VNS
 {
 public:
 	VNS(int);
-	ISolution execute_VNS(Problem p, ISolution s);
+	void execute_VNS(Problem p, ISolution *s);
 	ISolution VND(Problem p, ISolution *s);
+
 private:
 	int iter_max;
 

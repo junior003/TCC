@@ -374,9 +374,9 @@ void movement_intra_route(Problem p, ISolution* S)//trocas dentro da mesma rota
 	int pi = 0,pj=0;
 	int *path;
 	int aux;
-	for (int i = 0; i < p.get_num_vehicle(); i++)
+	for (int i = 0; i < S->get_num_vehicles_in_S(); i++)
 	{
-		//cout << "veiculo:" << i << endl;
+		cout << "veiculo:" << i << endl;
 
 		//somente em 50% das vezes havera troca 
 		if (randomic(0, 1) > 0.5)
@@ -435,14 +435,16 @@ void movement_inter_route(Problem p, ISolution *S)
 	int *pathi,*pathj;
 	int aux;
 
-		for (int k = 0; k < 5; k++)
+		for (int k = 0; k < 1; k++)
 		{
 
 			do
 			{
 				//cout << "gerando";
-				ri = rand() % p.get_num_vehicle();
-				rj = rand() % p.get_num_vehicle();
+
+				ri = rand() % S->get_num_vehicles_in_S();
+				rj = rand() % S->get_num_vehicles_in_S();
+				
 			} while (ri == rj);
 
 			pathi = NULL;
@@ -494,19 +496,28 @@ void movement_inter_route(Problem p, ISolution *S)
 
 void printaSolucao(Problem p,ISolution s)
 {
+	cout << "num_v: " << s.get_num_vehicles_in_S()<<endl;
+	for (int i = 0; i < s.get_num_vehicles_in_S(); i++)
+	{
+		cout << s.get_route_size(i) <<"..";
+	}
+	cout << endl;
+	
 	int cont = 0;
 	for (int i = 0; i < s.get_num_vehicles_in_S(); i++)
 	{
-		cout << "veiculo " << i << ":"<<endl;
+		cout << "veiculo " << i << ":";
 		cout << "[";
 		for (int j = 0; j < s.get_route_size(i); j++)
 		{
 			cout << p.get_client(s.get_client_id_on_route(i,j))->get_id()<<".";
 			cont++;
 		}
-		cout << "]"<<endl;
+		cout << "]";
 	}
 	cout << "numero de clientes na solucao:" << cont<<endl;
+
+	
 }
 
 bool evalue_solution(Problem *p, vector<ISolution> *solutions)

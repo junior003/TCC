@@ -59,8 +59,7 @@ public:
 
 	void set_ident(int);
 	void reset_ident();
-
-
+	friend class VNS;
 
 private:
 	int id;
