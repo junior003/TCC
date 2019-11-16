@@ -376,7 +376,7 @@ void movement_intra_route(Problem p, ISolution* S)//trocas dentro da mesma rota
 	int aux;
 	for (int i = 0; i < S->get_num_vehicles_in_S(); i++)
 	{
-		cout << "veiculo:" << i << endl;
+		//cout << "veiculo:" << i << endl;
 
 		//somente em 50% das vezes havera troca 
 		if (randomic(0, 1) > 0.5)

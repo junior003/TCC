@@ -54,7 +54,7 @@ void NSGAII::evaluate_population(Problem p,Population *pop)
 	
 	for (int i = 0; i < pop->get_max_size(); i++)
 	{
-		cout << "X" << endl;
+		//cout << "X" << endl;
 		pop->get_individual(i)->set_obj1_cost(p.obj1(pop->get_individual(i)));
 		pop->get_individual(i)->set_obj2_freshness(p.obj2(pop->get_individual(i),
 														 pop->get_individual(i)->get_dist_travel()));
@@ -992,7 +992,17 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 				
 				cout << "VNS |";
 				//movement_inter_route(p,&pop_1.pop.at(pop_1.pop.size()-1));
-				vns.execute_VNS(p, pop_1.get_individual(f1));
+				if (randomic(0, 1) > 0.6)
+				{
+					cout << "PAI 1 ";
+					vns.execute_VNS(p, pop_1.get_individual(f1));
+				}
+				if(randomic(0, 1) > 0.7)
+				{
+					cout << "PAI 2 ";
+					vns.execute_VNS(p, pop_1.get_individual(f2));
+				}
+				
 				//*pop_1.get_individual(f1) = X;
 				//pop_1.remove_individual(pop_1.get_individual(f1));
 				cout << "Terminou VNS" << endl;
