@@ -145,7 +145,9 @@ void ISolution::substitute_route(int v,int*route,int tam)
 //atribui ao vetor de rotas quantos clientes cada veiculo vai atender, este numero é compativel com o numero de clientes por cluster inicialmente
 void ISolution::set_route_size(int vpos, int rsize)
 {
+
 	route_sizes[vpos] = rsize;
+
 }
 
 
@@ -212,5 +214,18 @@ void ISolution::set_ident(int x)
 void ISolution::reset_ident()
 {
 	ident = 0;
+}
+
+void ISolution::recreate_route_sizes(int newtam)
+{
+	delete[] route_sizes;
+
+	route_sizes = new int[newtam];
+
+}
+
+void ISolution::recreate_path_sol()
+{
+	sol_path.clear();
 }
 

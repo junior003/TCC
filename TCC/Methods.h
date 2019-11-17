@@ -25,6 +25,8 @@ float mini(float, float);
 
 void movement_intra_route(Problem p, ISolution*);
 void movement_inter_route(Problem p, ISolution*);
+void realoc_inter_route(Problem p, ISolution *S);
+
 
 void printaSolucao(Problem p, ISolution s);
 float randomic(float min, float max);

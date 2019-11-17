@@ -29,14 +29,14 @@ void NSGAII::generate_Population(Problem p, int nind)
 	bool valid=false;
 	for (int i = 0; i < nind; i++)
 	{
-		/*if (i < 5)
-		{
-			KmeansS kmeans(p.get_num_vehicle(), p.get_num_clients(), 2);
-			kmeans.execute_kmeans_S(&p);
-			pop_1.add_individual(&build_solutions_space_or_timewindow_sort_S(&p, &kmeans, 1)[0]);
-			cout << "2 ind" << endl;
-		}
-		else {*/
+		//if (i < 5)
+		//{
+		//	KmeansS kmeans(p.get_num_vehicle(), p.get_num_clients(), 2);
+		//	kmeans.execute_kmeans_S(&p);
+		//	pop_1.add_individual(&build_solutions_space_or_timewindow_sort_S(&p, &kmeans, 1)[0]);
+		//	cout << "2 ind" << endl;
+		//}
+		//else {
 			//cout << "others ind" << endl;
 			
 			
@@ -191,12 +191,15 @@ void NSGAII::binary_tournament(Problem p, Population pop, int * father1, int * f
 void NSGAII::crossover_OX(Problem p,ISolution father1, ISolution father2, Population * pop2)
 {
 	int pos_cut1=0, pos_cut2=0;
+
+	//sequencias que representam os pais e filhos sem divisão de veiculos
 	int *Seq_f1 = new int[p.get_num_clients()];
 	int *Seq_f2 = new int[p.get_num_clients()];
 	int *Seq_s1 = new int[p.get_num_clients()];
 	int *Seq_s2 = new int[p.get_num_clients()];
 	vector<int> alocated_cl_s1, alocated_cl_s2;
 	//cout << "1" << endl;
+
 	//converter os pais para um vetor
 	int added = 0,added_s1 = 0,added_s2=0;
 	int *route_f1;
@@ -230,7 +233,7 @@ void NSGAII::crossover_OX(Problem p,ISolution father1, ISolution father2, Popula
 
 	
 
-	//cortar
+	//definindo pontos de corte e alocando vetores
 	//cout << "4" << endl;
 	do
 	{
@@ -272,6 +275,7 @@ void NSGAII::crossover_OX(Problem p,ISolution father1, ISolution father2, Popula
 				break;
 			}
 		}
+		//ignora o cliente se for repetido
 		if (repeated)
 		{
 			repeated = false;
@@ -992,12 +996,12 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 				
 				cout << "VNS |";
 				//movement_inter_route(p,&pop_1.pop.at(pop_1.pop.size()-1));
-				if (randomic(0, 1) > 0.6)
+				if (randomic(0, 1) > 0.8)
 				{
 					cout << "PAI 1 ";
 					vns.execute_VNS(p, pop_1.get_individual(f1));
 				}
-				if(randomic(0, 1) > 0.7)
+				if(randomic(0, 1) > 0.8)
 				{
 					cout << "PAI 2 ";
 					vns.execute_VNS(p, pop_1.get_individual(f2));
@@ -1065,19 +1069,32 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 				fwrite(&ob2,sizeof(float),1,a1);
 			}
 			*/
-		ISolution X;
-		if (actual_gen == num_generation)
-		{
-			cout << "melhorando ultimo front" << endl;
+		float hv_a, hv_d;
+
+		hv_a = hv.Smetric_per_front(p, fronts.at(0));
+		cout << "Hipervolume 1: " << hv_a<< endl;
+		//if (actual_gen == num_generation)
+		//{
+			//cout << "melhorando ultimo front" << endl;
 			cout << "tam:" << fronts.at(0).size();
 			for (int i = 0; i < fronts.at(0).size(); i++)
 			{
 				
-				//X = vns.execute_VNS(p, fronts.at(0).at(i));
+
+
+			//	vns.execute_VNS(p, &fronts.at(0).at(i));
 			}
 			
-		}
-		cout<<"Hipervolume: "<<hv.Smetric_per_front(p, fronts.at(0))<<endl;
+		//}
+			hv.hv_all_generations.pop_back();
+			hv_d = hv.Smetric_per_front(p, fronts.at(0));
+			cout<<"Hipervolume2: "<<hv_d<<endl;
+
+			if (hv_d < hv_a)
+			{
+				hv.hv_all_generations.pop_back();
+				hv.hv_all_generations.push_back(hv_a);
+			}
 
 		cout << "GERACAO: " << actual_gen << endl;
 		actual_num_sons = 0;
