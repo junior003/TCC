@@ -119,7 +119,7 @@ void KmeansS::execute_kmeans_S(Problem* P) //principal funcao
 		}
 		if (TERMINOU == true)//se tiver terminado mostra a saida
 		{
-			cout << "contador do kmeans: " << contador_iter << endl;
+			//cout << "contador do kmeans: " << contador_iter << endl;
 			//cout << "Agoritmo KMEANS - FIM" << endl;
 
 			//show(); // Mostra os clientes pertencentes a cada cluster

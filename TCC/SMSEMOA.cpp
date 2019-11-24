@@ -1029,23 +1029,16 @@ void SMSemoa::execute_SMSEMOA(Problem p,FILE* a1)
 		evaluate_population(p, &pop_1);
 	
 		//evaluate_population(p, &pop_2);
-		cout << "SEL ";
+		//cout << "SEL ";
 		selection(p, &pop_1);
-		cout << "Fim gen" << endl;
-		hv_all_generations.push_back(hv.Smetric_per_front(p, fronts.at(0)));
+		//cout << "Fim gen" << endl;
+		hv_all_generations.push_back(hv.Smetric_per_front(p, fronts.at(0),a1,num_generation,actual_gen));
 
 		if (actual_gen == num_generation)
 		{
 			for (int i = 0; i < hv_all_generations.size(); i++)
 			{
 				cout << hv_all_generations.at(i)<<endl;
-			}
-
-			if ((hv_all_generations.at(num_generation - 1) - hv_all_generations.at(num_generation - 11))> 100)
-			{
-				actual_gen = 0;
-				cout << "nao convergiu" << endl;
-				system("PAUSE");
 			}
 		}
 

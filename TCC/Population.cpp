@@ -353,13 +353,13 @@ void Population::Generate_Random_Individual(Problem * p)
 		cout << "Capacidade excedida" << endl;
 		system("PAUSE");
 	}
-	/*
+	
 	float obj1j;
 	float obj2j;
 	//Possivel melhoria pode ser aplicada aqui
 	bool better=false;
 	int conta = 0;
-	do {
+	/*do {
 		obj1j = p->obj1(S);
 		obj2j = p->obj2(S, S->get_dist_travel());
 		realoc_inter_route(*p, S);
@@ -372,7 +372,7 @@ void Population::Generate_Random_Individual(Problem * p)
 	
 		if (obj1j > S->get_obj1_cost() && obj2j < S->get_obj2_freshness())
 		{
-			cout << obj1j << "," << obj2j << "," << S->get_obj1_cost() << "," << S->get_obj2_freshness() << endl;
+			//cout << obj1j << "," << obj2j << "," << S->get_obj1_cost() << "," << S->get_obj2_freshness() << endl;
 			//cout << "true" << endl;
 		
 			conta++;

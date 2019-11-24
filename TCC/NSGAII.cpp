@@ -27,8 +27,72 @@ NSGAII::NSGAII(int num_i, int num_gen, float prob_cross, float prob_mut)
 void NSGAII::generate_Population(Problem p, int nind)
 {
 	bool valid=false;
-	for (int i = 0; i < nind; i++)
+
+
+	KmeansS kmeans1(p.get_num_vehicle(), p.get_num_clients(), 2);
+	kmeans1.execute_kmeans_S(&p);
+	pop_1.add_individual(&build_solutions_space_or_timewindow_sort_S(&p, &kmeans1, 1)[0]);
+//	cout << "1" << endl;
+	KmeansS kmeans2(p.get_num_vehicle(), p.get_num_clients(), 2);
+	kmeans2.execute_kmeans_S(&p);
+	pop_1.add_individual(&build_solutions_space_or_timewindow_sort_S(&p, &kmeans2, 1)[0]);
+//	cout << "2" << endl;
+	KmeansS kmeans3(p.get_num_vehicle(), p.get_num_clients(), 2);
+	kmeans3.execute_kmeans_S(&p);
+	pop_1.add_individual(&build_solutions_space_or_timewindow_sort_S(&p, &kmeans3, 1)[0]);
+//	cout << "3" << endl;
+	KmeansS kmeans4(p.get_num_vehicle(), p.get_num_clients(), 2);
+	kmeans4.execute_kmeans_S(&p);
+	pop_1.add_individual(&build_solutions_space_or_timewindow_sort_S(&p, &kmeans4, 1)[0]);
+
+	KmeansS kmeans5(p.get_num_vehicle(), p.get_num_clients(), 2);
+	kmeans5.execute_kmeans_S(&p);
+	pop_1.add_individual(&build_solutions_space_or_timewindow_sort_S(&p, &kmeans5, 1)[0]);
+
+	KmeansS kmeans6(p.get_num_vehicle(), p.get_num_clients(), 2);
+	kmeans6.execute_kmeans_S(&p);
+	pop_1.add_individual(&build_solutions_space_or_timewindow_sort_S(&p, &kmeans6, 1)[0]);
+
+	KmeansS kmeans7(p.get_num_vehicle(), p.get_num_clients(), 2);
+	kmeans7.execute_kmeans_S(&p);
+	pop_1.add_individual(&build_solutions_space_or_timewindow_sort_S(&p, &kmeans7, 1)[0]);
+
+	KmeansS kmeans8(p.get_num_vehicle(), p.get_num_clients(), 2);
+	kmeans8.execute_kmeans_S(&p);
+	pop_1.add_individual(&build_solutions_space_or_timewindow_sort_S(&p, &kmeans8, 1)[0]);
+
+	KmeansS kmeans9(p.get_num_vehicle(), p.get_num_clients(), 2);
+	kmeans9.execute_kmeans_S(&p);
+	pop_1.add_individual(&build_solutions_space_or_timewindow_sort_S(&p, &kmeans9, 1)[0]);
+
+	KmeansS kmeans10(p.get_num_vehicle(), p.get_num_clients(), 2);
+	kmeans10.execute_kmeans_S(&p);
+	pop_1.add_individual(&build_solutions_space_or_timewindow_sort_S(&p, &kmeans10, 1)[0]);
+
+	KmeansS kmeans11(p.get_num_vehicle(), p.get_num_clients(), 2);
+	kmeans11.execute_kmeans_S(&p);
+	pop_1.add_individual(&build_solutions_space_or_timewindow_sort_S(&p, &kmeans11, 1)[0]);
+
+	KmeansS kmeans12(p.get_num_vehicle(), p.get_num_clients(), 2);
+	kmeans12.execute_kmeans_S(&p);
+	pop_1.add_individual(&build_solutions_space_or_timewindow_sort_S(&p, &kmeans12, 1)[0]);
+
+	KmeansS kmeans13(p.get_num_vehicle(), p.get_num_clients(), 2);
+	kmeans13.execute_kmeans_S(&p);
+	pop_1.add_individual(&build_solutions_space_or_timewindow_sort_S(&p, &kmeans13, 1)[0]);
+
+	KmeansS kmeans14(p.get_num_vehicle(), p.get_num_clients(), 2);
+	kmeans14.execute_kmeans_S(&p);
+	pop_1.add_individual(&build_solutions_space_or_timewindow_sort_S(&p, &kmeans14, 1)[0]);
+
+	KmeansS kmeans15(p.get_num_vehicle(), p.get_num_clients(), 2);
+	kmeans15.execute_kmeans_S(&p);
+	pop_1.add_individual(&build_solutions_space_or_timewindow_sort_S(&p, &kmeans15, 1)[0]);
+	//cout << "4" << endl;
+	cout << "random" << endl;
+	for (int i = 0; i < nind-15; i++)
 	{
+		
 		//if (i < 5)
 		//{
 		//	KmeansS kmeans(p.get_num_vehicle(), p.get_num_clients(), 2);
@@ -957,7 +1021,7 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 	bool melhorou = false;
 	int actual_gen=0;
 	actual_num_sons = 0;
-	cout << "GERACAO DA POPULACAO INICIAL" << endl;
+	//cout << "GERACAO DA POPULACAO INICIAL" << endl;
 	generate_Population(p, num_ind);
 
 
@@ -994,9 +1058,9 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 			{
 				//pode haver melhoria aqui
 				
-				cout << "VNS |";
+				//cout << "VNS |";
 				//movement_inter_route(p,&pop_1.pop.at(pop_1.pop.size()-1));
-				if (randomic(0, 1) > 0.8)
+				/*if (randomic(0, 1) > 0.8)
 				{
 					cout << "PAI 1 ";
 					vns.execute_VNS(p, pop_1.get_individual(f1));
@@ -1006,10 +1070,10 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 					cout << "PAI 2 ";
 					vns.execute_VNS(p, pop_1.get_individual(f2));
 				}
-				
+				*/
 				//*pop_1.get_individual(f1) = X;
 				//pop_1.remove_individual(pop_1.get_individual(f1));
-				cout << "Terminou VNS" << endl;
+				//cout << "Terminou VNS" << endl;
 				//printaSolucao(p,*pop_1.get_individual(f1));
 				//f1 = pop_1.pop.at(pop_1.pop.size() - 1).get_id();
 	
@@ -1019,9 +1083,9 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 				
 				//cout << "CROSSOVER" << endl;
 				
-				cout << "COOX |";
+				//cout << "COOX |";
 				crossover_OX(p,*pop_1.get_individual(f1), *pop_1.get_individual(f2), &pop_2);
-				cout << "SONS |";
+				//cout << "SONS |";
 				
 				
 				actual_num_sons += 2;
@@ -1031,7 +1095,7 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 		
 		if (randomic(0, 1) < prob_mutation)
 		{
-			cout << "MT |";
+			//cout << "MT |";
 			
 			mutation(p, &pop_2);
 		}
@@ -1045,58 +1109,51 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 
 
 		//cout << "EVALUATE" << endl;
-		cout << "EV |";
+		//cout << "EV |";
 		
 		evaluate_population(p, &pop_2);
 		
 
 
-		cout << "SE |";
+		//cout << "SE |";
 		selection(p, &pop_1, &pop_2);
 	
 			
 
 
-			/*
-			for (int i = 0; i < fronts.at(0).size(); i++)
-			{
-
-				float ob1 = fronts.at(0).at(i).get_obj1_cost();
-				float ob2 = fronts.at(0).at(i).get_inv_obj2_freshness();
-
-				
-				fwrite(&ob1, sizeof(float),1,a1);
-				fwrite(&ob2,sizeof(float),1,a1);
-			}
-			*/
+			
+			
+			
 		float hv_a, hv_d;
 
-		hv_a = hv.Smetric_per_front(p, fronts.at(0));
-		cout << "Hipervolume 1: " << hv_a<< endl;
-		//if (actual_gen == num_generation)
-		//{
+		hv_a = hv.Smetric_per_front(p, fronts.at(0),a1,num_generation,actual_gen);
+
+
+		//MELHORIA COM VNS NO PRIMEIRO FRONT
+		//cout << "Hipervolume 1: " << hv_a<< endl;
+		
 			//cout << "melhorando ultimo front" << endl;
-			cout << "tam:" << fronts.at(0).size();
-			for (int i = 0; i < fronts.at(0).size(); i++)
-			{
+			//cout << "tam:" << fronts.at(0).size();
+			//for (int i = 0; i < fronts.at(0).size(); i++)
+			//{
 				
 
 
 			//	vns.execute_VNS(p, &fronts.at(0).at(i));
-			}
+			//}
 			
 		//}
-			hv.hv_all_generations.pop_back();
-			hv_d = hv.Smetric_per_front(p, fronts.at(0));
-			cout<<"Hipervolume2: "<<hv_d<<endl;
+			//hv.hv_all_generations.pop_back();
+			//hv_d = hv.Smetric_per_front(p, fronts.at(0));
+			//cout<<"Hipervolume2: "<<hv_d<<endl;
 
-			if (hv_d < hv_a)
-			{
-				hv.hv_all_generations.pop_back();
-				hv.hv_all_generations.push_back(hv_a);
-			}
+			//if (hv_d < hv_a)
+			//{
+				//hv.hv_all_generations.pop_back();
+				//hv.hv_all_generations.push_back(hv_a);
+			//}
 
-		cout << "GERACAO: " << actual_gen << endl;
+		//cout << "GERACAO: " << actual_gen << endl;
 		actual_num_sons = 0;
 		pop_1.clear_pop();
 		
@@ -1107,10 +1164,11 @@ void NSGAII::execute_NSGAII(Problem p,FILE*a1,FILE*a2,FILE*a3)
 		surv_pop.clear_pop();
 
 		
+	
 		// Mostrando todas os hipervolumes de todas as geracoes:
 		if (actual_gen == num_generation)
 		{
-		
+			cout << endl;
 			for (int i = 0; i < hv.hv_all_generations.size(); i++)
 			{
 				cout << hv.hv_all_generations.at(i) <<endl;

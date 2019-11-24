@@ -31,7 +31,7 @@ public:
 
 	void VerificaDominancia(vector<Tsol>* sols);
 
-	float Smetric_per_front(Problem p, vector<ISolution> front);
+	float Smetric_per_front(Problem p, vector<ISolution> front, FILE* a1, int numgen, int actualgen);
 
 	float Area_unique_Solution(Tsol s);
 

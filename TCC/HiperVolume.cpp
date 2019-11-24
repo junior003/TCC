@@ -160,7 +160,7 @@ void Hipervolume::VerificaDominancia(vector<Tsol> *sols)
 	
 }
 
-float Hipervolume::Smetric_per_front(Problem p, vector<ISolution> front)
+float Hipervolume::Smetric_per_front(Problem p, vector<ISolution> front,FILE* a1,int num_gen,int actual_gen)
 {
 
 	vector<Tsol> sols_R;
@@ -171,17 +171,17 @@ float Hipervolume::Smetric_per_front(Problem p, vector<ISolution> front)
 	int pos = 0;
 	float Area_referencia, Area_instancia;
 
-	cout << "Front [" <<front.size()<<"]"<<endl << endl;
+	//cout << "Front [" <<front.size()<<"]"<<endl << endl;
 	for (int i = 0; i < front.size(); i++)
 	{
 		sol_aux.ob1 = front.at(i).get_obj1_cost();
 		//aqui estava sendo passado o ob2 e nao o inverso
 		sol_aux.ob2 = front.at(i).get_inv_obj2_freshness();
-		cout << sol_aux.ob1 << "|";
-		cout << sol_aux.ob2 << endl;
+		//cout << sol_aux.ob1 << "|";
+		//cout << sol_aux.ob2 << endl;
 		sols_R.push_back(sol_aux);
 	}
-
+	
 	VerificaRepeticao(&sols_R);
 
 	VerificaDominancia(&sols_R);
@@ -193,6 +193,26 @@ float Hipervolume::Smetric_per_front(Problem p, vector<ISolution> front)
 	hv_all_generations.push_back(Area_referencia);
 	//cout << hv_all_generations.at(hv_all_generations.size() - 1) << endl;
 	//cout << "Num Solucoes: " << tam;
+
+	if (actual_gen == num_gen)
+	{
+		//cout << "ultima geração" << endl;
+		int tam = sols_R.size();
+
+		fwrite(&tam, sizeof(int), 1, a1);
+		//cout << "tam"<< tam << endl;
+		for (int i = 0; i < sols_R.size(); i++)
+		{
+			
+			float ob1 = sols_R.at(i).ob1;
+			float ob2 = sols_R.at(i).ob2;
+			//cout << "ob1" << ob1 << endl;
+			//cout << "ob2" << ob2 << endl;
+			fwrite(&ob1, sizeof(float), 1, a1);
+			fwrite(&ob2, sizeof(float), 1, a1);
+		}
+	}
+		
 
 	return Area_referencia;
 }

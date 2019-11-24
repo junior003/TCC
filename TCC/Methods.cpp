@@ -159,12 +159,25 @@ void switch_clients(int*route_temp,int size)
 
 vector<ISolution> build_solutions_space_or_timewindow_sort_S(Problem *p,KmeansS * K, int num_max_s)
 {
+	//cout << "montar" << endl;
 	vector<ISolution> solutions;
 	ISolution *s;
 	int* Seq_kmeans_sol = new int[p->get_num_clients()];
 	int* Seq_v_allocated_kmeans_sol = new int[p->get_num_clients()];
 	int pos_added_Seq = 0;
+
+	//correcao:
+	int *Seq_backup = new int[p->get_num_clients()];
+	int  *uma99 = new int[p->get_num_clients()];
+
+	for (int i = 0; i < p->get_num_clients(); i++)
+	{
+		uma99[i] = i+1;
 	
+	}
+
+
+//	cout << "1" << endl;
 	for (int i = 0; i < p->get_num_vehicle(); i++)
 	{
 		for (int j = 0; j < K->get_cluster(i)->get_Num_Clients(); j++)
@@ -172,19 +185,56 @@ vector<ISolution> build_solutions_space_or_timewindow_sort_S(Problem *p,KmeansS 
 			
 			
 			Seq_kmeans_sol[pos_added_Seq++] = K->get_cluster(i)->get_Client(j).get_id();
-		
+			Seq_backup[pos_added_Seq - 1] = Seq_kmeans_sol[pos_added_Seq - 1];
 		}
 	}
-	
+
+	for (int i = 0; i < p->get_num_clients(); i++)
+	{
+		for (int j = 0; j < p->get_num_clients(); j++)
+		{
+			if (Seq_backup[i] < 100)
+			{
+				if (Seq_backup[i] == uma99[j])
+				{
+					uma99[j] = -1;
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i < p->get_num_clients(); i++)
+	{
+		if (Seq_backup[i] >= 100 || Seq_backup[i] <= 0)
+		{
+			for (int j = 0; j < p->get_num_clients(); j++)
+			{
+				if (uma99[j] != -1)
+				{
+					Seq_backup[i] = uma99[j];
+					uma99[j] = -1;
+					break;
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i < p->get_num_clients(); i++)
+	{
+		Seq_kmeans_sol[i] = Seq_backup[i];
+	}
+	//cout << "2" << endl;
 	int acum_demand=0;
 	int cont_num_v = 1;
 	int actual_vehicle = 0;
 	int* cont_route_sizes=0;
+	//cout << "3" << endl;
+	//cout << p->get_num_clients() << endl;
 
 	
 	for (int i = 0; i < p->get_num_clients(); i++)
 	{
-		
+		//cout <<"|" <<acum_demand<<"|" << endl;
 		if (acum_demand + p->get_client(Seq_kmeans_sol[i])->get_demand() > p->get_capacity())
 		{
 			cont_num_v++;
@@ -196,7 +246,7 @@ vector<ISolution> build_solutions_space_or_timewindow_sort_S(Problem *p,KmeansS 
 			acum_demand += p->get_client(Seq_kmeans_sol[i])->get_demand();
 		}
 	}
-
+	//cout << "4" << endl;
 	cont_route_sizes = new int[cont_num_v];
 	acum_demand = 0;
 	cont_route_sizes[actual_vehicle] = 0;
@@ -222,7 +272,7 @@ vector<ISolution> build_solutions_space_or_timewindow_sort_S(Problem *p,KmeansS 
 	}
 	int actual_client = -1;
 
-	
+//	cout << "5" << endl;
 	s = new ISolution(p->get_num_clients(), cont_num_v);
 	
 	for (int i = 0; i < cont_num_v; i++)
@@ -238,18 +288,22 @@ vector<ISolution> build_solutions_space_or_timewindow_sort_S(Problem *p,KmeansS 
 			j++;
 			
 		} while (Seq_v_allocated_kmeans_sol[actual_client] == Seq_v_allocated_kmeans_sol[actual_client + 1]);
+	//	cout << "5.1" << endl;
 		sort_by_early_time(route_temp, cont_route_sizes[i], p);
-		
+	//	cout << "5.2" << endl;
 		s->set_route_size(i, cont_route_sizes[i]);
 		s->set_route(i, route_temp, cont_route_sizes[i]);
 
 		delete[] route_temp;
 	}
 	delete[] Seq_kmeans_sol;
+//	cout << "6" << endl;
 	solutions.push_back(*s);
 
 	
-	
+	//cout << "montou" << endl;
+
+//	system("PAUSE");
 	
 	return solutions;
 }
@@ -510,7 +564,7 @@ void realoc_inter_route(Problem p, ISolution *S)
 	int *Seq_f1_new = new int[p.get_num_clients()];
 	//int *Seq_f1_backup = 
 	vector<int> alocated_cl_s1;
-	cout << "1" << endl;
+	//cout << "1" << endl;
 
 	//converter os pais para um vetor
 	int added = 0, added_s1 = 0, added_s2 = 0;
@@ -527,7 +581,7 @@ void realoc_inter_route(Problem p, ISolution *S)
 		route_f1 = NULL;
 	}
 
-	cout << "2" << endl;
+	//cout << "2" << endl;
 
 
 
@@ -621,7 +675,7 @@ void realoc_inter_route(Problem p, ISolution *S)
 	} while (false);
 	//desativo
 
-	cout << old_num_v << " X " << cont_num_v << endl;
+	//cout << old_num_v << " X " << cont_num_v << endl;
 	
 	int* cont_route_sizes;
 	int* Seq_v_allocated_f1 = new int[p.get_num_clients()];
@@ -629,7 +683,7 @@ void realoc_inter_route(Problem p, ISolution *S)
 	cont_route_sizes = new int[cont_num_v];
 	acum_demand = 0;
 	cont_route_sizes[actual_vehicle] = 0;
-	cout << "5" << endl;
+	//cout << "5" << endl;
 	for (int i = 0; i < p.get_num_clients(); i++)
 	{
 		if (acum_demand + p.get_client(Seq_f1_new[i])->get_demand() > p.get_capacity())
@@ -718,9 +772,9 @@ void realoc_inter_route(Problem p, ISolution *S)
 	
 
 	delete[] cont_route_sizes;
-	cout << "7" << endl;
+	//cout << "7" << endl;
 	
-	printaSolucao(p, *S);
+	//printaSolucao(p, *S);
 	//cout << "3" << endl;
 	
 }
