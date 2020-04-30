@@ -11,7 +11,7 @@ using namespace std;
 Population::Population()
 {
 }
-//recebe como parametro o tamanho da população
+//recebe como parametro o tamanho da populaï¿½ï¿½o
 Population::Population(int n)
 {
 	set_max_size(n);
@@ -87,7 +87,7 @@ void Population::Generate_Random_Individual(Problem * p)
 	kmeans_ST.Calculate_ALL_Spatial_Distance(*p);
 	kmeans_ST.Calculate_ALL_Temporal_Distance(*p);
 	kmeans_ST.Calculate_ALL_Spatial_Temporal_Distance(*p);
-	//cout << "criando ind | ";
+	
 	//Associa um primeiro cliente aleatorio para cada veiculo
 	for (int i = 0; i < p->get_num_vehicle(); i++)
 	{
@@ -121,10 +121,10 @@ void Population::Generate_Random_Individual(Problem * p)
 			{
 				acum_demand += p->get_client(temp_sol[i][k])->get_demand();
 			}
-			//50% de chance de ser aleatório e 50% de chance de ser guloso
+			//50% de chance de ser aleatï¿½rio e 50% de chance de ser guloso
 		
 		//metodo guloso
-			if (randomic(0,1)<0.0 && greedy)
+			if (randomic(0,1)<0.5 && greedy)
 			{
 				
 				not_used_IDs.clear();
@@ -161,15 +161,11 @@ void Population::Generate_Random_Individual(Problem * p)
 					 //valid = true;
 				 }
 
-				//cout << "não pode entrar aqui" << endl;
+				//cout << "nï¿½o pode entrar aqui" << endl;
 			}
 			else //metodo aleatorio
 			{
-				//greedy = true;
-				//cout << "aleatorio" << endl;
-				//cout << "NCA:" << num_clients_added << endl;
-				//cout << "vescol:" << chosen_vehicle << endl;
-
+			
 				
 				do
 				{
@@ -177,25 +173,20 @@ void Population::Generate_Random_Individual(Problem * p)
 					
 					
 					not_used_IDs.clear();
-					//cout << "Todos:" << endl;
+					
 					for (int j = 1; j < p->get_num_clients() + 1; j++)
 					{
 						not_used_IDs.push_back(j);
-						//cout << not_used_IDs.at(j - 1) << ",";
+						
 
 					}
 
 					not_used_IDs = calculate_diference(&not_used_IDs, &used_IDs);
-					//cout << endl << "not_used:" << endl;
-					//for (int j = 0; j < not_used_IDs.size(); j++)
-					//{
-					//	cout << not_used_IDs[j] << ",";
-					//}
-					//cout << endl;
+					
 					
 					if (used_IDs.size() == p->get_num_clients() - 1 || not_used_IDs.size() == 0)
 					{
-					//	cout << "encheu" << endl;
+				
 						valid = true;
 						greedy = false;
 						break;
@@ -203,13 +194,13 @@ void Population::Generate_Random_Individual(Problem * p)
 					if (find(used_IDs.begin(), used_IDs.end(), new_ID) == used_IDs.end() && new_ID != 0)
 					{
 						//verificar capacidade
-						//cout << "eh inedito" << endl;
+						
 						if (acum_demand + p->get_client(new_ID)->get_demand() > p->get_capacity())
 						{
-						//	cout << "demanda notok "<< endl;
+					
 							cont_choosen_random_cl++;
-							//procura por até 10 clientes para adicionar, caso nao consiga achar
-							//um válido passa para o próximo veículo.
+							//procura por atï¿½ 10 clientes para adicionar, caso nao consiga achar
+							//um vï¿½lido passa para o prï¿½ximo veï¿½culo.
 							if (cont_choosen_random_cl > 10)
 							{
 								cont_choosen_random_cl = 0;
@@ -241,7 +232,7 @@ void Population::Generate_Random_Individual(Problem * p)
 		}
 	actual_vehicle = p->get_num_vehicle();
 
-	//cout << "saiu e ficou assim" << endl;
+	
 
 			//para os clientes restantes
 
@@ -277,8 +268,8 @@ void Population::Generate_Random_Individual(Problem * p)
 						{
 							
 							cont_choosen_random_cl++;
-							//procura por até três clientes para adicionar, caso nao consiga achar
-							//um válido passa para o próximo veículo.
+							
+							//um vï¿½lido passa para o prï¿½ximo veï¿½culo.
 							if (cont_choosen_random_cl > 10)
 							{
 								actual_vehicle++;
@@ -344,10 +335,7 @@ void Population::Generate_Random_Individual(Problem * p)
 		S->set_route(i, temp_route_aux, temp_sol[i].size());
 		delete [] temp_route_aux;
 	}
-	//printaSolucao(*p,*S);
-	//system("PAUSE");
-	//cout << p->obj1(S) << endl;
-	//cout << p->obj2(S, S->get_dist_travel()) << endl;
+	
 	if (!p->constraint_vehicle_capacity(*S))
 	{
 		cout << "Capacidade excedida" << endl;
@@ -383,11 +371,7 @@ void Population::Generate_Random_Individual(Problem * p)
 		}
 		
 	} while ((!better) && (conta<30));
-
-	*/
-	//enquanto eu conseguir melhorar continua;
-	//cout << endl;
-	//system("PAUSE");
+*/
 	add_individual(S);
 
 }
