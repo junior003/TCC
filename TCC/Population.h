@@ -23,8 +23,10 @@ public:
 	void remove_individual(ISolution*);
 	ISolution* get_individual(int);
 	void Generate_Random_Individual(Problem *p);
+
 	int find_minor_DST(Problem p, int last_added, vector<int>* not_used_IDs, KmeansST * kmeans_ST);
 	void print_population(Problem p, FILE* arq1, FILE *arq2,FILE *arq3);
+
 	void uni_pops(Population*);
 	void transfer_pop(Population*);
 	void clear_pop();
@@ -40,4 +42,4 @@ private:
 
 };
 
-#endif // !1
+#endif 
