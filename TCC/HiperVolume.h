@@ -15,7 +15,7 @@
 #include "KmeansST.h"
 #include "SMSEMOA.h"
 
-
+//Classe que possui todos os calculos referentes a metrica de hipervolume
 class Hipervolume
 {
 public:

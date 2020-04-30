@@ -18,7 +18,7 @@ public:
 	ISolution(int, int);//construtor sem solucao pronta
 
 	void operator=(ISolution s);
-	//sobreescrever operador igual
+	
 
 
 	void set_num_vehicles_in_S(int);
@@ -57,10 +57,12 @@ public:
 	float get_CD_obj1();
 	float get_CD_obj2();
 
+	//reconstrucao de solucoes
 	void set_ident(int);
 	void reset_ident();
 	void recreate_route_sizes(int);
 	void recreate_path_sol();
+
 	friend class VNS;
 	vector< vector<int> > sol_path; //vetor que indica para cada veiculo a sequencia de clientes a serem visitado
 
@@ -71,10 +73,10 @@ private:
 	int *route_sizes; //tamanho do caminho por veiculo (varia pois o numero de clientes muda)
 	float obj1_cost; //custo da solucao associado a funcao obj1
 	float obj2_freshness; //qualidade do produto no momento da ultima entrega associado a obj2
-	float inv_obj2_freshness;
+	float inv_obj2_freshness;//inverso da obj2
 
-	float crownding_dist_obj1;
-	float crownding_dist_obj2;
+	float crownding_dist_obj1;//crownding distance referente ao objetivo 1
+	float crownding_dist_obj2;//crownding distance referente ao objetivo 2
 
 };
 

@@ -12,10 +12,10 @@ void input_data(char* name,Problem &p)
 	*/
 	arq >>beta>> num_v >> cap;
 
-	p.set_num_vehicle(40);
+	p.set_num_vehicle(5);
 	p.set_capacity(50);
 	p.set_num_clients(99);
-	p.set_fixed_cost_vehicle(50);
+	p.set_fixed_cost_vehicle(12);
 	p.set_product_freshness(beta/100.0);
 	p.set_weight(10, 10, 20);
 	p.set_transportation_cost_per_KM(0.5);

@@ -31,6 +31,12 @@ void realoc_inter_route(Problem p, ISolution *S);
 void printaSolucao(Problem p, ISolution s);
 float randomic(float min, float max);
 
+bool ja_rodou(int test);
+
+void teste_completo(int test);
+
+void inicia_teste();
+
 
 #endif // !1
 

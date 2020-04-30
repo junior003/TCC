@@ -35,20 +35,11 @@ void SMSemoa::generate_Population(Problem p, int nind)
 	bool valid = false;
 	for (int i = 0; i < nind; i++)
 	{
-		/*if (i < 5)
-		{
-			KmeansS kmeans(p.get_num_vehicle(), p.get_num_clients(), 2);
-			kmeans.execute_kmeans_S(&p);
-			pop_1.add_individual(&build_solutions_space_or_timewindow_sort_S(&p, &kmeans, 1)[0]);
-			cout << "2 ind" << endl;
-		}
-		else {*/
-		//cout << "others ind" << endl;
+
 
 
 		pop_1.Generate_Random_Individual(&p);
-		//}
-
+		
 
 
 
@@ -815,7 +806,7 @@ void SMSemoa::non_dominated_sort(Problem p, Population *p1)
 
 	fronts.clear();
 	ind_front = new int[num_ind+1];
-	//vetor onde cada posição possui quantos dominam o individuo i
+	//vetor onde cada posiï¿½ï¿½o possui quantos dominam o individuo i
 	bool** dominate = new bool*[p1->get_max_size()+1];
 	//vetor que possui em cada posicao um vetor dos individuos em que i dominam
 	int pos_dominate = 0;
@@ -940,7 +931,7 @@ void SMSemoa::discard_worst_HV_solution(vector<ISolution> front)
 		aux.ob2 = front.at(i).get_inv_obj2_freshness();
 
 		temp = hv.Area_unique_Solution(aux);
-
+		
 		if (temp < minor_HV)
 		{
 			minor_HV = temp;
@@ -949,8 +940,12 @@ void SMSemoa::discard_worst_HV_solution(vector<ISolution> front)
 	}
 
 	pop_1.remove_individual(&front.at(pos_minor));
-
 	front.erase(front.begin() + pos_minor);
+	if (front.size() == 0)
+	{
+		front.clear();
+	}
+	
 
 	
 
@@ -959,18 +954,27 @@ void SMSemoa::selection(Problem p, Population *p1)
 {
 	FILE *a1, *a2;
 	int ind_surv = 0;
-	//unificar populacoes
 
-	//p1->uni_pops(p2);
 	
 	p1->reset_ident_SMSEMOA();
 
 	non_dominated_sort(p, p1);
 
-
-	//Analisar se realmente nao e necessário a CD
-	//crowding_distance_sort(p, p1);
+	crowding_distance_sort(p, p1);
 	
+
+	for (int i = 0; i < fronts.size(); i++)
+	{
+		cout << "front: " << i << endl;
+
+		for (int j = 0; j < fronts.at(i).size(); j++)
+		{
+			cout<<fronts.at(i).at(j).get_obj1_cost()<<"|";
+			cout<<fronts.at(i).at(j).get_inv_obj2_freshness()<<endl;
+		}
+		cout << endl;
+	}
+
 	for (int i = 0; i < fronts.size(); i++)
 	{
 		//Se houver somente um front
@@ -982,7 +986,7 @@ void SMSemoa::selection(Problem p, Population *p1)
 
 			break;
 		}
-		//se não se o ultimo front tiver somente uma solução 
+		//se nï¿½o se o ultimo front tiver somente uma soluï¿½ï¿½o 
 		else if (fronts.at(fronts.size() - 1).size() == 1)
 		{
 			//descartar  diretamente na pop_1
@@ -992,7 +996,7 @@ void SMSemoa::selection(Problem p, Population *p1)
 			fronts.at(fronts.size() - 1).clear();
 			break;
 		}
-		//se houver mais de uma soluçao no ultimo front
+		//se houver mais de uma soluï¿½ao no ultimo front
 		else{
 			
 			discard_worst_HV_solution(fronts.at(fronts.size()-1));
@@ -1001,6 +1005,8 @@ void SMSemoa::selection(Problem p, Population *p1)
 		}
 
 	}
+
+	
 
 
 }
@@ -1018,31 +1024,21 @@ void SMSemoa::execute_SMSEMOA(Problem p,FILE* a1)
 	{
 		int f1 = 0, f2 = 0;
 
-		//gerar 2 filhos e selecionar 1
-		cout << "BN ";
+		
 		binary_tournament(p, pop_1, &f1, &f2, num_generation);
-		cout << "COX ";
+	
 		crossover_OX(p, *pop_1.get_individual(f1), *pop_1.get_individual(f2), &pop_1);
-		cout << "MUT ";
+		
 		mutation(p, &pop_1);
-		cout << "EVA ";
+		
 		evaluate_population(p, &pop_1);
 	
-		//evaluate_population(p, &pop_2);
-		//cout << "SEL ";
+		
 		selection(p, &pop_1);
-		//cout << "Fim gen" << endl;
-		hv_all_generations.push_back(hv.Smetric_per_front(p, fronts.at(0),a1,num_generation,actual_gen));
+	
+		hv.Smetric_per_front(p, fronts.at(0),a1,num_generation,actual_gen);
 
-		if (actual_gen == num_generation)
-		{
-			for (int i = 0; i < hv_all_generations.size(); i++)
-			{
-				cout << hv_all_generations.at(i)<<endl;
-			}
-		}
-
-
+		
 		actual_gen++;
 	}
 }

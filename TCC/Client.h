@@ -32,14 +32,20 @@ public:
 	int get_num_attr();	// retona o total de variaveis do clientes
 	int get_id();
 private:
+	//numero de id
 	int id;
+	//Coordenadas
 	int coord_X;
 	int coord_Y;
+	//Demanda
 	int demand;
+	//Janela de tempo
 	int initial_T;
 	int due_T;
 	int service_T;
+	//Qualidade minima
 	int minimum_freshness;
+	//Identificador referente ao algoritmo de k-means
 	int id_cluster;
 	bool kmeans_ST;
 

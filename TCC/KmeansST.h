@@ -18,18 +18,22 @@ public:
 
 	KmeansST(Problem p, int K, float alpha1, float alpha2, float k_1, float k_2, float k_3);//construtor recebe os valores que serao atribuidos inicialmente
 
+	//calcula a distancia espaco tempora entre todos os clientes
 	void Calculate_ALL_Spatial_Temporal_Distance(Problem p);
-
+	//calcula a DT para um par de clientes
 	float Calculate_Temporal_Distance_Pair(Problem, Client C1, Client C2);
-
+	//Calcula a DS para um par de clientes
 	float Calculate_Spatial_Temporal_Distance_Pair(Problem, Client, Client);
-
+	//Calcula todas as DS
 	void Calculate_ALL_Spatial_Distance(Problem p);
-
+	//Calcula toda as DT
 	void Calculate_ALL_Temporal_Distance(Problem p);
+	//Calcula a maior janela de tempo
 	void Calculate_largest_tw(Client c);
+	//Calcula a projecao da janela de tempo
 	void Temporal_Projection(Problem, int, int, float*, float*);
 
+	//Calcula a DST em relacao a projecao
 	float Integral_early(Problem, int, int, float, float);
 	float Integral_normal(Problem, int, int, float, float);
 	float Integral_due(Problem, int, int, float, float);

@@ -61,47 +61,40 @@ float KmeansST::Integral_early(Problem p,int i,int j, float a1, float b1)
 	float t_1 = 0.0, inte_early=0.0;
 	//cout << endl;
 	t_1 = mini(b1, p.get_client(j)->get_initial_T());
-	//cout << "Integral UP " << t_1<<endl;
-	//cout << "[" << k_2 << "*((" << t_1 << "*" << t_1 << ")/2)+" << k_1 << "*" << p.get_client(j)->get_due_T() << "-(" << k_1 << "+" << k_2 << ")*" << p.get_client(j)->get_initial_T() << "]"<<endl;
 	inte_early = k_2 * ((t_1*t_1) / 2) + k_1 * p.get_client(j)->get_due_T()*t_1 - (((k_1 + k_2)*p.get_client(j)->get_initial_T())*t_1);
 	t_1 = mini(a1, p.get_client(j)->get_initial_T());
-	//cout << "Integral Down " << t_1 << endl;
-	//cout << "- [" << k_2 << "*((" << t_1 << "*" << t_1 << ")/2)+" << k_1 << "*" << p.get_client(j)->get_due_T() << "-(" << k_1 << "+" << k_2 << ")*" << p.get_client(j)->get_initial_T() << "]" << endl;
-
+	
 	inte_early -= k_2 * ((t_1*t_1) / 2) + k_1 * p.get_client(j)->get_due_T()*t_1 - (((k_1 + k_2)*p.get_client(j)->get_initial_T())*t_1);
-	//cout << "Result:" << inte_early << endl;
+	
 	return inte_early;
 }
 float KmeansST::Integral_normal(Problem p , int i, int j, float a1, float b1)
 {
 	float t_1 = 0.0, inte_normal = 0.0;
-	//cout << endl;
+
 	t_1 = maxi(mini(b1, p.get_client(j)->get_due_T()), p.get_client(j)->get_initial_T());
-	//cout << "Integral UP " << t_1 << endl;
+	
 	inte_normal = -k_1 * ((t_1*t_1) / 2) + k_1 * p.get_client(j)->get_due_T()*t_1;
-	//cout << "[-" << k_1 << "*((" << t_1 << "*" << t_1 << ")/2)+" << k_1 << "*" << p.get_client(j)->get_due_T() << "*" << t_1 << endl;
+	
 	t_1 = mini(maxi(a1, p.get_client(j)->get_initial_T()), p.get_client(j)->get_due_T());
 
-	//cout << "Integral Down " << t_1 << endl;
+	
 	inte_normal -= -k_1 *((t_1*t_1) / 2) + k_1 * p.get_client(j)->get_due_T()*t_1;
 
-	//cout << "- [-" << k_1 << "*((" << t_1 << "*" << t_1 << ")/2)+" << k_1 << "*" << p.get_client(j)->get_due_T() << "*" << t_1 << endl;
-	//cout << "Result:" << inte_normal << endl;
+	
 	return inte_normal;
 }
 float KmeansST::Integral_due(Problem p , int i, int j, float a1, float b1)
 {
 	float t_1 = 0.0, inte_due = 0.0;
-	//cout << endl;
+	
 	t_1 = mini(b1, p.get_client(j)->get_due_T());
-	//cout << "Integral UP " << t_1 << endl;
-	//cout << "[-" << k_3 << "*((" << t_1 << "*" << t_1 << ")/2+" << k_3 << "*" << p.get_client(j)->get_due_T() << "*" << t_1 << endl;
+	/
 	inte_due = -k_3 * ((t_1*t_1) / 2) + k_3 * p.get_client(j)->get_due_T()*t_1;
 	t_1 = maxi(a1, p.get_client(j)->get_due_T());
-	//cout << "Integral Down " << t_1 << endl;
+
 	inte_due -= -k_3 * ((t_1*t_1) / 2) + k_3 * p.get_client(j)->get_due_T()*t_1;
-	//cout << "-[-" << k_3 << "*((" << t_1 << "*" << t_1 << ")/2+" << k_3 << "*" << p.get_client(j)->get_due_T() << "*" << t_1 << endl;
-	//cout << "result:" << inte_due << endl;
+
 	return inte_due;
 }
 //funcao para calcular a spatial
@@ -123,8 +116,7 @@ void KmeansST::Calculate_ALL_Spatial_Distance(Problem p) {
 						p.get_client(j)->get_X(),
 						p.get_client(j)->get_Y()
 					);
-				//cout << "(" << i << "," << j << ")=" << dist_Spatial_Matrix[i][j] << endl;
-
+				
 				if (dist_Spatial_Matrix[i][j] > max_spatial_dist)
 				{
 					max_spatial_dist = dist_Spatial_Matrix[i][j];
@@ -159,49 +151,16 @@ void KmeansST::Calculate_ALL_Temporal_Distance(Problem p) {
 			{
 				
 				Temporal_Projection(p, i, j, &a_1, &b_1);
-				/*
-				cout << "INICIO TESTE" << endl;
-				float dist_temp = p.euclidian_distance(p.get_client(i)->get_X(),
-					p.get_client(i)->get_Y(),
-					p.get_client(j)->get_X(),
-					p.get_client(j)->get_Y());
-				cout << "dist:" << dist_temp<<endl;
-				cout << "calculo do a_1:" << endl;
-				cout << "a_1=" << p.get_client(i)->get_initial_T() << "+" << p.get_client(i)->get_service_T() << "+" << ((dist_temp) / (30 / 3.6))<<endl;
-				a_1 = p.get_client(i)->get_initial_T() + p.get_client(i)->get_service_T() + ((dist_temp) / (30 / 3.6));
-				b_1 = p.get_client(i)->get_due_T() + p.get_client(i)->get_service_T() + ((dist_temp) / (30 / 3.6));
-				cout << "b_1=" << p.get_client(i)->get_due_T() << "+" << p.get_client(i)->get_service_T() << "+" << ((dist_temp) / (30 / 3.6)) << endl;
-				cout << "FIMTESTE" << endl;
-				
-				cout << "<" << p.get_client(i)->get_initial_T() << "," << p.get_client(i)->get_service_T() << "," <<p.get_client(i)->get_due_T() << ">" << endl;
-				cout << "<" << p.get_client(j)->get_initial_T() << "," << p.get_client(j)->get_service_T() << "," << p.get_client(j)->get_due_T() << ">" << endl;
-
-				cout << "a_1:" << a_1 << endl;
-				cout << "b_1:" << b_1 << endl;
-				cout << "ltww:" << largest_tw_width << endl;*/
+			
 				dist_Temporal_Matrix[i][j] = k_1 * largest_tw_width +
 					(
 						+Integral_early(p, i, j, a_1, b_1)
 						+ Integral_normal(p, i, j, a_1, b_1)
 						+ Integral_due(p, i, j, a_1, b_1)
 						) / (b_1 - a_1);
-				/*
-				cout << "I_early:" << Integral_early(p, i, j, a_1, b_1) << endl;
-				cout << "I_normal:" << Integral_normal(p, i, j, a_1, b_1) << endl;
-				cout << "I_due:" << Integral_due(p, i, j, a_1, b_1) << endl;
-				cout << "Dst ij = " << dist_Temporal_Matrix[i][j] << endl;
-				cout << "INVERSO" << endl;
-				*/
-				Temporal_Projection(p, j, i, &a_1, &b_1);
-				/*cout << "<" << p.get_client(j)->get_initial_T() << "," << p.get_client(j)->get_service_T() << "," << p.get_client(j)->get_due_T() << ">" << endl;
-				cout << "<" << p.get_client(i)->get_initial_T() << "," << p.get_client(i)->get_service_T() << "," << p.get_client(i)->get_due_T() << ">" << endl;
 				
-				cout << "a_1:" << a_1 << endl;
-				cout << "b_1:" << b_1 << endl;
-				cout << "I_early:" << Integral_early(p, j, i, a_1, b_1) << endl;
-				cout << "I_normal:" << Integral_normal(p, j, i, a_1, b_1) << endl;
-				cout << "I_due:" << Integral_due(p, j, i, a_1, b_1) << endl;
-				*/
+				Temporal_Projection(p, j, i, &a_1, &b_1);
+				
 				dist_Temporal_Matrix[j][i] = k_1 * largest_tw_width +
 					(
 						+Integral_early(p, j, i, a_1, b_1)
@@ -209,15 +168,7 @@ void KmeansST::Calculate_ALL_Temporal_Distance(Problem p) {
 						+ Integral_due(p, j, i, a_1, b_1)
 						) / (b_1 - a_1);
 				
-				//cout << "Dst ji = " << dist_Temporal_Matrix[j][i] << endl;
-				/*if (dist_Temporal_Matrix[i][j] < 0)
-				{
-					dist_Temporal_Matrix[i][j] = -1 * dist_Temporal_Matrix[i][j];
-				}
-				*/
-				//cout << dist_Temporal_Matrix[i][j] << "|";
-
-
+				
 				//Garantindo que o maior valor sera mantido tanto de i para j  quanto de j para i:
 				
 				if (dist_Temporal_Matrix[i][j] > dist_Temporal_Matrix[j][i])
@@ -247,7 +198,7 @@ void KmeansST::Calculate_ALL_Temporal_Distance(Problem p) {
 				{
 					min_temporal_dist = dist_Temporal_Matrix[j][i];
 				}
-				//cout << "passou ifs" << endl;
+				
 			
 				
 			}
@@ -260,47 +211,18 @@ void KmeansST::Calculate_ALL_Temporal_Distance(Problem p) {
 
 void KmeansST::Calculate_ALL_Spatial_Temporal_Distance(Problem p)
 {
-	//alocar matriz
-	//cout << "final" << endl;
-
-	/*
-	for (int i = 0; i < p.get_num_clients() + 1; i++)
-	{
-		cout << endl;
-		for (int j = 0; j < p.get_num_clients() + 1; j++)
-		{
-			cout << " " << i << "," << j << " ";
-			cout << "  " << dist_Spatial_Matrix[i][j] << "|" << dist_Temporal_Matrix[i][j] << "|" << dist_Spa_Temp_Matrix[i][j];
-		}
-	}
-	system("PAUSE");
-	*/
-
-	//laco para cada posicao da matriz
+	
 	for (int i = 0; i < p.get_num_clients() + 1; i++)
 	{
 		for (int j = 0; j < p.get_num_clients() + 1; j++)
 		{
-			/*cout << "alfa1 e alfa2:" << alpha_1 << "," << alpha_2 << endl;
-			cout << "dS[" << i << "][" << j << "]:" << dist_Spatial_Matrix[i][j] << endl;
-			cout << "dT[" << i << "][" << j << "]:" << dist_Temporal_Matrix[i][j] << endl;
-			cout << "min_spatial_dist:" << min_spatial_dist << endl;
-			cout << "max_spatial_dist:" << max_spatial_dist << endl;
-			cout << "min_temporal_dist:" << min_temporal_dist << endl;
-			cout << "max_temporal_dist:" << max_temporal_dist << endl;*/
+			
 			if (i != j && i != 0 && j != 0)
 			{
 				dist_Spa_Temp_Matrix[i][j] =
 					alpha_1 * ((dist_Spatial_Matrix[i][j] - min_spatial_dist) / (max_spatial_dist - min_spatial_dist))
 					+ alpha_2 * ((dist_Temporal_Matrix[i][j] - min_temporal_dist) / (max_temporal_dist - min_temporal_dist));
-				//cout << "dS[" << i << "][" << j << "]:" << dist_Spatial_Matrix[i][j] << endl;
-				//cout << "dT[" << i << "][" << j << "]:" << dist_Temporal_Matrix[i][j] << endl;
-		
-					
 				
-				
-				
-				//cout << "................................................................." << endl;
 			}
 
 
@@ -358,9 +280,6 @@ float KmeansST::Calculate_Spatial_Temporal_Distance_Pair(Problem p,Client c1, Cl
 	float Spa_Temp_dist =
 		alpha_1 * ((spatial_dist - min_spatial_dist) / (max_spatial_dist - min_spatial_dist))
 		+ alpha_2 * ((Calculate_Temporal_Distance_Pair(p,c1,c2) - min_temporal_dist) / (max_temporal_dist - min_temporal_dist));
-	//cout << "dST = " << alpha_1 << "*((" << spatial_dist << "-" << min_spatial_dist << ")/(" << max_spatial_dist << "-" << min_spatial_dist << "))" << endl;
-	//cout << "+" << alpha_2 << "*((" << Calculate_Temporal_Distance_Pair(p, c1, c2) << "-" << min_temporal_dist << ")/(" << max_temporal_dist << "-" << min_temporal_dist << "))";
-	
 	
 	return Spa_Temp_dist;
 }
@@ -371,10 +290,10 @@ int KmeansST::get_id_nearest_center(Problem p, Client E)//retorna o centro mais 
 	double distMinor = 9999;//soma recebera o somatorio das diferencas ao quadrado e distMenor servira para comparar as distancias
 	int id_Cluster_center = 0;// recebera id do cluster mais proximo
 	double distance = 0;
-	//cout << "REALOCACAO" << endl;
+	
 	for (int i = 0; i < K; i++)//para cada cluster o processo se repete
 	{
-		//cout << "(" << i << "," << E.get_id()<<")";
+		
 		Client Ctemp(i, clusters[i].get_att_center(0),
 			clusters[i].get_att_center(1),0,
 			clusters[i].get_att_center(2),
@@ -382,12 +301,12 @@ int KmeansST::get_id_nearest_center(Problem p, Client E)//retorna o centro mais 
 
 			distance = Calculate_Spatial_Temporal_Distance_Pair(p, Ctemp, E);
 	
-			//cout << "dST:" << distance << endl;
+		
 			
 		if (distance < distMinor) //se a distancia atual for a menor distancia 
 		{
 			distMinor = distance;// a distancia menor passa a ser a distancia atual
-			id_Cluster_center = i;// o id do cluster mais proximo é o cluster identificado pelo valor contido em i 
+			id_Cluster_center = i;// o id do cluster mais proximo ï¿½ o cluster identificado pelo valor contido em i 
 
 		}
 		distance = 0;
@@ -441,9 +360,9 @@ void KmeansST::execute_kmeans_ST(Problem * P)
 
 			int idClusterAntigo = P->get_client(i)->getCluster();//pega o id do cluster antigo da clientes
 			int idCentroProx = get_id_nearest_center(*P,*P->get_client(i));// calcula a distancia da emprea ao cluster mais proximo
-			if (idClusterAntigo != idCentroProx) // verifica se o cluster antigo ainda é o mais proximo 
+			if (idClusterAntigo != idCentroProx) // verifica se o cluster antigo ainda ï¿½ o mais proximo 
 			{
-				if (idClusterAntigo != -1  )//se a clientes ja estiver em um cluster entra no if se nao ele é ignorado
+				if (idClusterAntigo != -1  )//se a clientes ja estiver em um cluster entra no if se nao ele ï¿½ ignorado
 				{
 					if (clusters[idClusterAntigo].get_Num_Clients() == 1)
 					{
@@ -484,9 +403,7 @@ void KmeansST::execute_kmeans_ST(Problem * P)
 		}
 		if (TERMINOU == true)//se tiver terminado mostra a saida
 		{
-			//cout << "Agoritmo KMEANS-ST - FIM" << endl;
-			//cout << K << endl;
-			//show(); // Mostra os clientes pertencentes a cada cluster
+			
 
 			break;//quebra o loop
 		}

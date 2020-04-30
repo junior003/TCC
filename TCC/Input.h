@@ -9,7 +9,7 @@
 
 #include <fstream>
 using namespace std;
-
+//leitura de dados
 void input_data(char*, Problem &);
 
 #endif // !INPUT_H

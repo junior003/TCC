@@ -3,6 +3,14 @@
 #include <limits.h>
 #include <algorithm>
 
+#include <iomanip>
+#include <vector>
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <chrono>
+
 
 
 
@@ -74,7 +82,7 @@ void sort_by_spatial_distance(int * route_temp, int  n, Problem *p)
 	int * final_route = new int[n];
 	float menordist = INT_MAX;
 	float dist_atual = 0;
-	//primeira rodada -> origem com os demais
+	
 
 	int pivox = 0;
 	int pivoy = 0;
@@ -159,14 +167,14 @@ void switch_clients(int*route_temp,int size)
 
 vector<ISolution> build_solutions_space_or_timewindow_sort_S(Problem *p,KmeansS * K, int num_max_s)
 {
-	//cout << "montar" << endl;
+	
 	vector<ISolution> solutions;
 	ISolution *s;
 	int* Seq_kmeans_sol = new int[p->get_num_clients()];
 	int* Seq_v_allocated_kmeans_sol = new int[p->get_num_clients()];
 	int pos_added_Seq = 0;
 
-	//correcao:
+	
 	int *Seq_backup = new int[p->get_num_clients()];
 	int  *uma99 = new int[p->get_num_clients()];
 
@@ -176,8 +184,6 @@ vector<ISolution> build_solutions_space_or_timewindow_sort_S(Problem *p,KmeansS 
 	
 	}
 
-
-//	cout << "1" << endl;
 	for (int i = 0; i < p->get_num_vehicle(); i++)
 	{
 		for (int j = 0; j < K->get_cluster(i)->get_Num_Clients(); j++)
@@ -223,18 +229,15 @@ vector<ISolution> build_solutions_space_or_timewindow_sort_S(Problem *p,KmeansS 
 	{
 		Seq_kmeans_sol[i] = Seq_backup[i];
 	}
-	//cout << "2" << endl;
+	
 	int acum_demand=0;
 	int cont_num_v = 1;
 	int actual_vehicle = 0;
 	int* cont_route_sizes=0;
-	//cout << "3" << endl;
-	//cout << p->get_num_clients() << endl;
-
 	
 	for (int i = 0; i < p->get_num_clients(); i++)
 	{
-		//cout <<"|" <<acum_demand<<"|" << endl;
+		
 		if (acum_demand + p->get_client(Seq_kmeans_sol[i])->get_demand() > p->get_capacity())
 		{
 			cont_num_v++;
@@ -246,7 +249,7 @@ vector<ISolution> build_solutions_space_or_timewindow_sort_S(Problem *p,KmeansS 
 			acum_demand += p->get_client(Seq_kmeans_sol[i])->get_demand();
 		}
 	}
-	//cout << "4" << endl;
+	
 	cont_route_sizes = new int[cont_num_v];
 	acum_demand = 0;
 	cont_route_sizes[actual_vehicle] = 0;
@@ -272,14 +275,14 @@ vector<ISolution> build_solutions_space_or_timewindow_sort_S(Problem *p,KmeansS 
 	}
 	int actual_client = -1;
 
-//	cout << "5" << endl;
+
 	s = new ISolution(p->get_num_clients(), cont_num_v);
 	
 	for (int i = 0; i < cont_num_v; i++)
 	{
 		int j = 0;
 		int* route_temp = new int[cont_route_sizes[i]];
-		//cout << "valores sendo repassados de seq para route:" << endl;
+		
 		do 
 		{
 			
@@ -288,9 +291,9 @@ vector<ISolution> build_solutions_space_or_timewindow_sort_S(Problem *p,KmeansS 
 			j++;
 			
 		} while (Seq_v_allocated_kmeans_sol[actual_client] == Seq_v_allocated_kmeans_sol[actual_client + 1]);
-	//	cout << "5.1" << endl;
+	
 		sort_by_early_time(route_temp, cont_route_sizes[i], p);
-	//	cout << "5.2" << endl;
+	
 		s->set_route_size(i, cont_route_sizes[i]);
 		s->set_route(i, route_temp, cont_route_sizes[i]);
 
@@ -300,10 +303,46 @@ vector<ISolution> build_solutions_space_or_timewindow_sort_S(Problem *p,KmeansS 
 //	cout << "6" << endl;
 	solutions.push_back(*s);
 
-	
-	//cout << "montou" << endl;
+	float obj1j;
+	float obj2j;
 
-//	system("PAUSE");
+	bool better = false;
+	int conta = 0;
+
+		//Possivel melhoria pode ser aplicada na construcao da solucao, basta retirar o comentario abaixo
+	/*for (int i = 0; i < p->get_num_clients() / 5; i++)
+	{
+	
+		movement_inter_route(*p, &solutions.at(0));
+		movement_intra_route(*p, &solutions.at(0));
+	}
+	*/
+	/*do {
+		obj1j = p->obj1(S);
+		obj2j = p->obj2(S, S->get_dist_travel());
+		realoc_inter_route(*p, S);
+  	    
+		S->set_obj1_cost(p->obj1(S));
+		S->set_obj2_freshness(p->obj2(S, S->get_dist_travel()));
+		//cout << " $ ";
+
+
+		if (obj1j > S->get_obj1_cost() && obj2j < S->get_obj2_freshness())
+		{
+			//cout << obj1j << "," << obj2j << "," << S->get_obj1_cost() << "," << S->get_obj2_freshness() << endl;
+			//cout << "true" << endl;
+
+			conta++;
+		}
+		if (conta > 30)
+		{
+			better = true;
+		}
+
+	} while ((!better) && (conta<30));
+
+	*/
+
 	
 	return solutions;
 }
@@ -430,8 +469,7 @@ void movement_intra_route(Problem p, ISolution* S)//trocas dentro da mesma rota
 	int aux;
 	for (int i = 0; i < S->get_num_vehicles_in_S(); i++)
 	{
-		//cout << "veiculo:" << i << endl;
-
+		
 		//somente em 50% das vezes havera troca 
 		if (randomic(0, 1) > 0.5)
 		{
@@ -440,41 +478,25 @@ void movement_intra_route(Problem p, ISolution* S)//trocas dentro da mesma rota
 			{
 				do
 				{
-					//cout << "gerando";
+					
 					pi = rand() % S->get_route_size(i);
 					pj = rand() % S->get_route_size(i);
 				} while (pi == pj);
 
-				//cout << "pi:" << pi << endl;
-				//cout << "pj:" << pj << endl;
+				
 
 				path = S->get_path_Sol(i, S->get_route_size(i));
-				/*
-				for (int j = 0; j < S->get_route_size(i); j++)
-				{
-					cout << path[j] << ".";
-				}
-				cout << endl;
-				*/
+				
 				aux = path[pi];
-				//cout << "{" << aux << "," << path[pi] << "}" << endl;
+				
 				path[pi] = path[pj];
-				//cout << "{" << path[pi] << "," << path[pj] << "}" << endl;
+				
 				path[pj] = aux;
-				//cout << "{" << path[pj] << "," << aux << "}" << endl;
+			
 				sort_by_early_time(path, S->get_route_size(i), &p);
 				S->substitute_route(i, path, S->get_route_size(i));
 
 				
-
-				//S->set_route(i, path, S->get_route_size(i));
-				//path = NULL;
-				//path = S->get_path_Sol(i, S->get_route_size(i));
-				//for (int j = 0; j < S->get_route_size(i); j++)
-				//{
-					//cout << path[j] << ".";
-				//}
-				//cout << endl;
 			}
 		}
 				
@@ -509,46 +531,27 @@ void movement_inter_route(Problem p, ISolution *S)
 			pathj = NULL;
 			
 				
-				//cout << "gerando";
+			
 				pi = rand() % S->get_route_size(ri);
 				pj = rand() % S->get_route_size(rj);
 				
 
-				//cout << "pi:" << pi << endl;
-				//cout << "pj:" << pj << endl;
-
 				pathi = S->get_path_Sol(ri, S->get_route_size(ri));
 				pathj = S->get_path_Sol(rj, S->get_route_size(rj));
-				/*
-				for (int j = 0; j < S->get_route_size(i); j++)
-				{
-					cout << path[j] << ".";
-				}
-				cout << endl;
-				*/
+				
 				aux = pathi[pi];
-				//cout << "{" << aux << "," << path[pi] << "}" << endl;
+				
 				pathi[pi] = pathj[pj];
-				//cout << "{" << path[pi] << "," << path[pj] << "}" << endl;
+				
 				pathj[pj] = aux;
-				//cout << "{" << path[pj] << "," << aux << "}" << endl;
+				
 				sort_by_early_time(pathi, S->get_route_size(ri), &p);
 				sort_by_early_time(pathj, S->get_route_size(rj), &p);
 				S->substitute_route(ri, pathi, S->get_route_size(ri));
 				S->substitute_route(rj, pathj, S->get_route_size(rj));
-				//S->set_route(i, path, S->get_route_size(i));
-				//path = NULL;
-				//path = S->get_path_Sol(i, S->get_route_size(i));
-				//for (int j = 0; j < S->get_route_size(i); j++)
-				//{
-					//cout << path[j] << ".";
-				//}
-				//cout << endl;
-			
-
-
-
-		}
+				
+				
+			}
 
 
 	
@@ -559,14 +562,12 @@ void realoc_inter_route(Problem p, ISolution *S)
 {
 	int pos_realoc_or = 0, pos_realoc_de = 0;
 
-	//sequencias que representam os pais e filhos sem divisão de veiculos
+	//sequencias que representam os pais e filhos sem divisï¿½o de veiculos
 	int *Seq_f1 = new int[p.get_num_clients()];
 	int *Seq_f1_new = new int[p.get_num_clients()];
-	//int *Seq_f1_backup = 
+	
 	vector<int> alocated_cl_s1;
-	//cout << "1" << endl;
-
-	//converter os pais para um vetor
+	/
 	int added = 0, added_s1 = 0, added_s2 = 0;
 	int *route_f1;
 	int *route_f2;
@@ -581,12 +582,12 @@ void realoc_inter_route(Problem p, ISolution *S)
 		route_f1 = NULL;
 	}
 
-	//cout << "2" << endl;
+
 
 
 
 	//definindo pontos de corte e alocando vetores
-	//XXXXXXXXXXXXXXXX
+
 	int cont_better = 0;
 	int acum_demand = 0;
 	int cont_num_v = 1;
@@ -673,23 +674,23 @@ void realoc_inter_route(Problem p, ISolution *S)
 		}
 		cont_better++;
 	} while (false);
-	//desativo
+	
 
 	//cout << old_num_v << " X " << cont_num_v << endl;
 	
 	int* cont_route_sizes;
 	int* Seq_v_allocated_f1 = new int[p.get_num_clients()];
-	//XXXXXXXXXXXXXXXXXXXX
+	
 	cont_route_sizes = new int[cont_num_v];
 	acum_demand = 0;
 	cont_route_sizes[actual_vehicle] = 0;
-	//cout << "5" << endl;
+	
 	for (int i = 0; i < p.get_num_clients(); i++)
 	{
 		if (acum_demand + p.get_client(Seq_f1_new[i])->get_demand() > p.get_capacity())
 		{
 
-			//cout << "nao cabe" << endl;
+			
 			cont_route_sizes[++actual_vehicle] = 0;
 			cont_route_sizes[actual_vehicle]++;
 			acum_demand = p.get_client(Seq_f1_new[i])->get_demand();
@@ -705,9 +706,7 @@ void realoc_inter_route(Problem p, ISolution *S)
 		}
 	}
 	int actual_client = -1;
-	//cout << "6" << endl;
-	//ISolution *son1 = new ISolution(p.get_num_clients(), cont_num_v);
-	//son1->reset_ident();
+	
 
 	vector<vector<int>> path_sol_aux;
 	vector<int> rt;
@@ -725,18 +724,18 @@ void realoc_inter_route(Problem p, ISolution *S)
 
 			route_temp[j] = Seq_f1_new[++actual_client];
 
-			//cout << route_temp[j]<<"|";
+			
 			j++;
 			
 
 		} while (Seq_v_allocated_f1[actual_client] == Seq_v_allocated_f1[actual_client + 1]);
 	
-		//cout <<"new_num_v"<< cont_num_v << endl;
+		
 		S->recreate_route_sizes(cont_num_v);
 		S->set_num_vehicles_in_S(cont_num_v);
-		//cout << "vai receber" << cont_route_sizes[i] << endl;
+		
 		S->set_route_size(i, cont_route_sizes[i]);
-		//cout<<"recebido:"<<S->get_route_size(i);
+	
 		S->recreate_path_sol();
 
 	
@@ -751,44 +750,35 @@ void realoc_inter_route(Problem p, ISolution *S)
 		S->set_route(i, route_temp, cont_route_sizes[i]);
 
 		delete[] route_temp;
-		//cout << "depois" << endl;
-		//cout << "new_num_v" << cont_num_v << endl;
-		//cout << "vai receber" << cont_route_sizes[i] << endl;
-	//	S->set_route_size(i, cont_route_sizes[i]);
-		//cout << "recebido:" << S->get_route_size(i)<<endl<<endl;
+		
 
 	}
 
 	S->sol_path = path_sol_aux;
 	for (int i = 0; i < cont_num_v; i++)
 	{
-		//cout << "depois" << endl;
-		//cout << "new_num_v" << cont_num_v << endl;
-		//cout << "vai receber" << cont_route_sizes[i] << endl;
+		
 			S->set_route_size(i, cont_route_sizes[i]);
-		//cout << "recebido:" << S->get_route_size(i) << endl << endl;
+	
 
 	}
 	
 
 	delete[] cont_route_sizes;
-	//cout << "7" << endl;
-	
-	//printaSolucao(p, *S);
-	//cout << "3" << endl;
+
 	
 }
 
 
-void printaSolucao(Problem p,ISolution s)
+void printaSolucao(Problem p, ISolution s)
 {
-	cout << "num_v: " << s.get_num_vehicles_in_S()<<endl;
+	cout << "num_v: " << s.get_num_vehicles_in_S() << endl;
 	for (int i = 0; i < s.get_num_vehicles_in_S(); i++)
 	{
-		cout << s.get_route_size(i) <<"..";
+		cout << s.get_route_size(i) << "..";
 	}
 	cout << endl;
-	
+
 	int cont = 0;
 	for (int i = 0; i < s.get_num_vehicles_in_S(); i++)
 	{
@@ -796,14 +786,14 @@ void printaSolucao(Problem p,ISolution s)
 		cout << "[";
 		for (int j = 0; j < s.get_route_size(i); j++)
 		{
-			cout << p.get_client(s.get_client_id_on_route(i,j))->get_id()<<".";
+			cout << p.get_client(s.get_client_id_on_route(i, j))->get_id() << ".";
 			cont++;
 		}
 		cout << "]";
 	}
-	cout << "numero de clientes na solucao:" << cont<<endl;
+	cout << "numero de clientes na solucao:" << cont << endl;
 
-	
+
 }
 
 bool evalue_solution(Problem *p, vector<ISolution> *solutions)
@@ -833,3 +823,53 @@ float randomic(float min, float max)
 	return ((float)(rand() % 1000 / 1000.0)*(max - min) + min);
 }
 
+//funcao que indica se o teste foi rodado (retornando false por padrao)
+bool ja_rodou(int test)
+{
+	
+	return false;
+}
+
+
+
+void teste_completo(int test)
+{
+	FILE* arq;
+
+	if ((arq = fopen("state_teste.bin", "r+b")) == NULL)
+	{
+		cout << "erro ao abrir o arquivo";
+		return;
+	}
+	bool state = true;
+	for (int i = 0; i < 23; i++)
+	{
+		if (i <= test)
+		{
+			fwrite(&state, sizeof(bool), 1, arq);
+		}
+	}
+	fclose(arq);
+}
+void inicia_teste()
+{
+	FILE* arq;
+	if ((arq = fopen("state_teste.bin", "r+b")) == NULL)
+	{
+		cout << "erro ao abrir o arquivo state";
+		return;
+	}
+
+	bool state = false;
+	fread(&state, sizeof(bool), 1, arq);
+	cout << "iniciando " << state;
+	if (!state)
+	{
+		for (int i = 0; i < 23; i++)
+		{
+			fwrite(&state, sizeof(bool), 1, arq);
+		}
+	}
+	
+	fclose(arq);
+}

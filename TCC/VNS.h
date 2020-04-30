@@ -29,10 +29,10 @@ public:
 	VNS(int);
 	void execute_VNS(Problem p, ISolution *s);
 	void VND(Problem p, ISolution *s);
-
+	void MOVNS(Problem p, ISolution *s);
 private:
 	int iter_max;
-
+	ISolution *front_MO;
 
 };
 
